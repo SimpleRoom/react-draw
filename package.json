@@ -107,5 +107,6 @@
     "presets": [
       "react-app"
     ]
-  }
+  },
+  "homepage":"public"
 }

@@ -56,6 +56,7 @@ const GiftItem = styled.div`
     border-radius:5px;
     border:2px solid;
     border-color:${props => props.active ? activeColor : grayColor};
+    background-color:${props => props.active ? "#146c8a" : "#ffffff"};
 
     .gift-name{
         text-align:center;
@@ -113,17 +114,15 @@ class Draw extends PureComponent {
             endStopIndex: 14,
             // 抽奖是否正在进行中
             isDrawing: false,
-            // 转速:fastSpeed,middleSpeed,slowSpeed
+            // 转速:fastSpeed,slowSpeed
             fastSpeed: 100,
-            middleSpeed: 300,
-            slowSpeed: 700,
-            // 已经，快速，中速，慢速 转的圈数，至少转的圈数
+            slowSpeed: 300,
+            // 已经，快速，慢速 转的圈数，至少转的圈数
             ringNum: 0,
             fastRingNum: 5,
-            middleRingNum: 2,
             slowRingNum: 2,
             // 是否要启动中、慢
-            isNeedMiddle: false,
+            speedType: "fast",
             isNeedSlow: false,
         }
         console.log(this.state)
@@ -148,11 +147,61 @@ class Draw extends PureComponent {
                 const fastTimer = setInterval(() => {
                     this.fastRotateMove(fastTimer)
                 }, fastSpeed)
+
+                // this.rotateMove()
             }
         }
     }
+    // 递归调用,由快到慢停留时间太久
+    rotateMove() {
+        let { stepCount,
+            myCount,
+            startIndex,
+            endStopIndex,
+            ringNum,
+            fastRingNum,
+            slowRingNum,
+            speedType,
+            fastSpeed,
+            slowSpeed } = this.state
+        let speed = speedType === "fast" ? fastSpeed : slowSpeed
+        let currentRingNum = speedType === "fast" ? fastRingNum : slowRingNum
+        this.timer = setInterval(() => {
+            startIndex++
+            if (startIndex === stepCount) {
+                startIndex = 0
+            }
+            // 重置激活位置
+            this.setState({ activeIndex: startIndex })
+            // 回到起点，转动圈数+1，完成快速圈数，启动中速或者慢速
+            if (startIndex === (stepCount - 1)) {
+                ringNum = ringNum + 1
+                this.setState({ ringNum: ringNum })
+                if (speedType === "fast" && ringNum > currentRingNum) {
+                    clearInterval(this.timer)
+                    // 启动
+                    this.setState({ speedType: "slow", ringNum: 0 })
+                    this.rotateMove()
+                }
+                // 
+                console.log(`转动了-${ringNum}-圈`)
+            }
+            // 至少转了，且位置与接口相同停止，回复所有默认值
+            if (speedType === "slow" && ringNum === currentRingNum && startIndex === endStopIndex) {
+                clearInterval(this.timer)
+                // 当前剩余抽奖次数，接口返回
+                let currentCount = myCount - 1
+                this.setState({ isDrawing: false, ringNum: 0, speedType: "fast", myCount: currentCount })
+                console.log(this.state, '抽奖结束')
+            }
+            // 重置起点位置为上次位置
+            startIndex = startIndex % stepCount
+            this.setState({ startIndex: startIndex })
+        }, speed)
+
+    }
     fastRotateMove(timerId) {
-        let { stepCount, startIndex, ringNum, fastRingNum, middleSpeed } = this.state
+        let { stepCount, startIndex, ringNum, fastRingNum, slowSpeed } = this.state
         // 可操作
         startIndex++
         if (startIndex === stepCount) {
@@ -167,25 +216,26 @@ class Draw extends PureComponent {
             if (ringNum > fastRingNum) {
                 clearInterval(timerId)
                 // 启动
-                this.setState({ isNeedMiddle: true, ringNum: 0 })
+                this.setState({ isNeedSlow: true, ringNum: 0 })
             }
             // 
             console.log(`转动了-${ringNum}-圈`)
         }
         // 重置起点位置为上次位置
-        // startIndex = startIndex % stepCount
+        startIndex = startIndex % stepCount
+        console.log(startIndex)
         this.setState({ startIndex: startIndex })
         // 开启慢速
-        if (this.state.isNeedMiddle) {
+        if (this.state.isNeedSlow) {
             // 已经转的圈数
             console.log(`开始中速`)
             const middleTimer = setInterval(() => {
-                this.middleRotateMove(middleTimer)
-            }, middleSpeed)
+                this.slowRotateMove(middleTimer)
+            }, slowSpeed)
         }
     }
-    middleRotateMove(timerId) {
-        let { stepCount, startIndex, ringNum, middleRingNum, endStopIndex, myCount } = this.state
+    slowRotateMove(timerId) {
+        let { stepCount, startIndex, ringNum, slowRingNum, endStopIndex, myCount } = this.state
         startIndex++
         if (startIndex === stepCount) {
             startIndex = 0
@@ -196,17 +246,13 @@ class Draw extends PureComponent {
         if (startIndex === (stepCount - 1)) {
             ringNum = ringNum + 1
             this.setState({ ringNum: ringNum })
-            if (ringNum > middleRingNum) {
-                // 
-                console.log(`至少转了${ringNum}`)
-            }
         }
         // 至少转了，且位置与接口相同停止，回复所有默认值
-        if (ringNum === middleRingNum && startIndex === endStopIndex) {
+        if (ringNum === slowRingNum && startIndex === endStopIndex) {
             clearInterval(timerId)
             // 当前剩余抽奖次数，接口返回
             let currentCount = myCount - 1
-            this.setState({ isDrawing: false, ringNum: 0, isNeedMiddle: false, myCount: currentCount })
+            this.setState({ isDrawing: false, ringNum: 0, isNeedSlow: false, myCount: currentCount })
             console.log(this.state, '抽奖结束')
         }
         // 重置起点位置为上次位置

@@ -96,14 +96,30 @@ class Draw extends PureComponent {
         super(props)
         this.state = {
             giftList: getGift(),
-            // 开始位置
-            startIndex: 0,
-            // 停止位置
-            endIndex: 1,
-            // 抽奖是否正在进行中
-            isDrawing: 0,
+            // 一圈的总长度，礼物总数量
+            stepCount: getGift().length,
             // 剩余抽奖次数
             myCount: 5,
+            // 转动开始位置默认：0，动态，可设置(>=0&&<stepCount)
+            startIndex: 0,
+            // 转动激活位置默认：0，动态，可设置(>=0&&<stepCount)
+            activeIndex: 0,
+            // 最终要停下的位置：接口返回(>=0&&<stepCount)
+            endStopIndex: 14,
+            // 抽奖是否正在进行中
+            isDrawing: false,
+            // 转速:fastSpeed,middleSpeed,slowSpeed
+            fastSpeed: 100,
+            middleSpeed: 300,
+            slowSpeed: 700,
+            // 已经，快速，中速，慢速 转的圈数 
+            ringNum: 0,
+            fastRingNum: 5,
+            middleRingNum: 5,
+            slowRingNum: 2,
+            // 是否要启动中、慢
+            isNeedMiddle: false,
+            isNeedSlow: false,
         }
         console.log(this.state)
     }
@@ -111,13 +127,84 @@ class Draw extends PureComponent {
         console.log(`mouted`)
     }
     startDraw = e => {
-        this.setState({ isDrawing: 1 })
-        console.log(this.state)
+        // 抽奖进行中禁止点击，抽奖次数<=0禁止点击
+        let { isDrawing, myCount, fastSpeed } = this.state
+        if (isDrawing) {
+            console.log(`抽奖进行中，请稍后再试`)
+        } else {
+            if (myCount <= 0) {
+                console.log(`抽奖次数不足!`)
+            } else {
+                // 正常抽奖，设置抽奖进行中状态
+                this.setState({ isDrawing: true })
+                const fastTimer = setInterval(() => {
+                    this.fastRotateMove(fastTimer)
+                }, fastSpeed)
+            }
+        }
+    }
+    fastRotateMove(timerId) {
+        let { stepCount, startIndex, ringNum, fastRingNum, middleSpeed } = this.state
+        // 可操作
+        startIndex++
+        // 重置激活位置
+        this.setState({ activeIndex: startIndex })
+        // 回到起点，转动圈数+1，完成快速圈数，启动中速或者慢速
+        if (startIndex > (stepCount - 1)) {
+            ringNum = ringNum + 1
+            this.setState({ ringNum: ringNum })
+            if (ringNum > fastRingNum) {
+                clearInterval(timerId)
+                // 启动
+                this.setState({ isNeedMiddle: true, ringNum: 0 })
+            }
+            // 
+            console.log(`转动了-${ringNum}-圈`)
+        }
+        // 重置起点位置为上次位置
+        startIndex = startIndex % stepCount
+        this.setState({ startIndex: startIndex })
+        // 开启慢速
+        if (this.state.isNeedMiddle) {
+            // 已经转的圈数
+            console.log(`开始中速`)
+            const middleTimer = setInterval(() => {
+                this.middleRotateMove(middleTimer)
+            }, middleSpeed)
+        }
+    }
+    middleRotateMove(timerId) {
+        let { stepCount, startIndex, ringNum, middleRingNum, endStopIndex, myCount } = this.state
+        startIndex++
+        // 重置激活位置
+        this.setState({ activeIndex: startIndex })
+        // 
+        if (startIndex > (stepCount - 1)) {
+            ringNum = ringNum + 1
+            this.setState({ ringNum: ringNum })
+            if (ringNum > middleRingNum) {
+                // 
+                console.log(`至少转了${ringNum}`)
+            }
+        }
+        // 至少转了，且位置与接口相同停止，回复所有默认值
+        if (ringNum === middleRingNum && startIndex === endStopIndex) {
+            clearInterval(timerId)
+            // 当前剩余抽奖次数，接口返回
+            let currentCount = myCount - 1
+            this.setState({ isDrawing: false, myCount: currentCount })
+            console.log(this.state, '转接结束')
+        }
+        // 重置起点位置为上次位置
+        startIndex = startIndex % stepCount
+        console.log(startIndex)
+        this.setState({ startIndex: startIndex })
     }
     render() {
-        const { giftList, endIndex, isDrawing, myCount } = this.state
+        // readonly
+        const { giftList, activeIndex, isDrawing, myCount } = this.state
         const getIsActive = (item) => (
-            item.id === endIndex ? 1 : 0
+            item.id === activeIndex ? 1 : 0
         )
         return (
             <div className="draw-box">

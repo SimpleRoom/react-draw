@@ -113,7 +113,7 @@ function getRandomNum(min, max) {
 }
 // add props
 for (let i = 0; i < GiftList.length; i++) {
-    GiftList[i].id = i + 1
+    GiftList[i].id = i
     GiftList[i].count = getRandomNum(1, 10)
 }
 // out

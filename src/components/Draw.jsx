@@ -9,7 +9,7 @@ const bgColor = "#CCEEFF"
 const grayColor = "#999999"
 const activeColor = "#FFA488"
 const btnBg = "#33CCFF"
-const btnClickBg = "#BEBEBE"
+const btnClickBg = "#FFA488"
 const ClearFix = styled.div`
     &:before,&:after{
         display:table;
@@ -84,12 +84,12 @@ const DrawBtn = styled.button`
     border-radius:5px;
     cursor:pointer;
     padding:0;
-
     font-size:45px;
+    /* color:${props => props.isClicking ? grayColor : activeColor}; */
 `;
 
 function GetDrawBtn({ isClicking, onClick }) {
-    return <DrawBtn isClicking={isClicking} onClick={onClick}>{isClicking ? "抽奖中" : "开始"}</DrawBtn>
+    return <DrawBtn isClicking={isClicking} onClick={onClick}>{isClicking ? "抽奖中..." : "开始"}</DrawBtn>
 }
 class Draw extends PureComponent {
     constructor(props) {

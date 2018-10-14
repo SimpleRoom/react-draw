@@ -112,10 +112,10 @@ class Draw extends PureComponent {
             fastSpeed: 100,
             middleSpeed: 300,
             slowSpeed: 700,
-            // 已经，快速，中速，慢速 转的圈数 
+            // 已经，快速，中速，慢速 转的圈数，至少转的圈数
             ringNum: 0,
             fastRingNum: 5,
-            middleRingNum: 5,
+            middleRingNum: 2,
             slowRingNum: 2,
             // 是否要启动中、慢
             isNeedMiddle: false,
@@ -147,10 +147,13 @@ class Draw extends PureComponent {
         let { stepCount, startIndex, ringNum, fastRingNum, middleSpeed } = this.state
         // 可操作
         startIndex++
+        if (startIndex === stepCount) {
+            startIndex = 0
+        }
         // 重置激活位置
         this.setState({ activeIndex: startIndex })
         // 回到起点，转动圈数+1，完成快速圈数，启动中速或者慢速
-        if (startIndex > (stepCount - 1)) {
+        if (startIndex === (stepCount - 1)) {
             ringNum = ringNum + 1
             this.setState({ ringNum: ringNum })
             if (ringNum > fastRingNum) {
@@ -162,7 +165,7 @@ class Draw extends PureComponent {
             console.log(`转动了-${ringNum}-圈`)
         }
         // 重置起点位置为上次位置
-        startIndex = startIndex % stepCount
+        // startIndex = startIndex % stepCount
         this.setState({ startIndex: startIndex })
         // 开启慢速
         if (this.state.isNeedMiddle) {
@@ -176,10 +179,13 @@ class Draw extends PureComponent {
     middleRotateMove(timerId) {
         let { stepCount, startIndex, ringNum, middleRingNum, endStopIndex, myCount } = this.state
         startIndex++
+        if (startIndex === stepCount) {
+            startIndex = 0
+        }
         // 重置激活位置
         this.setState({ activeIndex: startIndex })
         // 
-        if (startIndex > (stepCount - 1)) {
+        if (startIndex === (stepCount - 1)) {
             ringNum = ringNum + 1
             this.setState({ ringNum: ringNum })
             if (ringNum > middleRingNum) {
@@ -192,12 +198,11 @@ class Draw extends PureComponent {
             clearInterval(timerId)
             // 当前剩余抽奖次数，接口返回
             let currentCount = myCount - 1
-            this.setState({ isDrawing: false, myCount: currentCount })
-            console.log(this.state, '转接结束')
+            this.setState({ isDrawing: false, ringNum: 0, isNeedMiddle: false, myCount: currentCount })
+            console.log(this.state, '抽奖结束')
         }
         // 重置起点位置为上次位置
         startIndex = startIndex % stepCount
-        console.log(startIndex)
         this.setState({ startIndex: startIndex })
     }
     render() {

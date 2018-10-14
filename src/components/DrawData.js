@@ -8,6 +8,7 @@ const GiftList = [{
         name: "丸子",
         icon: "/images/icon02.png",
         left: "92px",
+        top: "0",
     },
     {
         name: "火箭",

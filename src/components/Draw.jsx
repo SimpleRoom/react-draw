@@ -91,6 +91,11 @@ const DrawBtn = styled.button`
 function GetDrawBtn({ isClicking, onClick }) {
     return <DrawBtn isClicking={isClicking} onClick={onClick}>{isClicking ? "抽奖中..." : "开始"}</DrawBtn>
 }
+
+// mock endStopIndex
+function getRandomNum(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}
 class Draw extends PureComponent {
     constructor(props) {
         super(props)
@@ -135,6 +140,9 @@ class Draw extends PureComponent {
             if (myCount <= 0) {
                 console.log(`抽奖次数不足!`)
             } else {
+                // mock endStopIndex
+                let endIndex = getRandomNum(0, 18)
+                this.setState({ endStopIndex: endIndex })
                 // 正常抽奖，设置抽奖进行中状态
                 this.setState({ isDrawing: true })
                 const fastTimer = setInterval(() => {

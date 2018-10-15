@@ -141,7 +141,7 @@ class Draw extends PureComponent {
                 console.log(`抽奖次数不足!`)
             } else {
                 // mock endStopIndex
-                let endIndex = getRandomNum(0, 17)
+                let endIndex = getRandomNum(1, 18)
                 this.setState({ endStopIndex: endIndex })
                 console.log(`最终停留位置是：${endIndex}`)
                 // 正常抽奖，设置抽奖进行中状态

@@ -139,20 +139,20 @@ class Draw extends PureComponent {
                 // 开启转盘
                 this.setState({ isDrawing: false }, this.startRun);
                 // 假装发了一个ajax请求
-                setTimeout(function(){
+                setTimeout(function () {
                     let endStopIndex = getRandomNum(1, 18);
-                    _this.setState({getResultFinish:true, endStopIndex});
+                    _this.setState({ getResultFinish: true, endStopIndex });
                 }, 3000);
             }
         }
     }
-    startRun(){
+    startRun() {
         // 转一圈又一圈
         // 直到知道结果，慢慢变慢速度，停在结果那;
         // 转盘听到结果值时，重置初始值（{isDrawing:false, getResultFinish:false}）；
         const _this = this;
-        const {stepCount, speed} = this.state;
-        let {activeIndex} = this.state;
+        const { stepCount, speed } = this.state;
+        let { activeIndex } = this.state;
         /*
         * Function addOneStep
         * 奖品位置移动一小步
@@ -161,31 +161,31 @@ class Draw extends PureComponent {
         */
         function addOneStep(params) {
             activeIndex += 1;
-            let {shouldContinue, leftRound} = params;
+            let { shouldContinue, leftRound } = params;
 
-            if(shouldContinue) {
+            if (shouldContinue) {
                 // 如果到超过奖品个数，重置为1
-                if(activeIndex > stepCount) {
-                    if(_this.state.getResultFinish){
+                if (activeIndex > stepCount) {
+                    if (_this.state.getResultFinish) {
                         leftRound -= 1;
                     }
                     activeIndex = 1;
                 }
                 // 如果已经到最后一圈了  且  已经到了制定要中奖的位置了  就不需要继续了
-                if(leftRound === 0 &&  activeIndex === _this.state.endStopIndex){
+                if (leftRound === 0 && activeIndex === _this.state.endStopIndex) {
                     shouldContinue = false;
                 }
-                _this.setState({activeIndex});
+                _this.setState({ activeIndex });
                 const nextParams = {
                     shouldContinue,
                     leftRound,
                 };
                 _this.timer = setTimeout(addOneStep.bind(this, nextParams), speed[leftRound]);
-            }else {
-                _this.setState({isDrawing:false, getResultFinish:false});
+            } else {
+                _this.setState({ isDrawing: false, getResultFinish: false });
             }
         }
-        addOneStep({shouldContinue:true, leftRound:5});
+        addOneStep({ shouldContinue: true, leftRound: 5 });
     }
     render() {
         // readonly

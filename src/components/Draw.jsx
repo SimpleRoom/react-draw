@@ -136,8 +136,8 @@ class Draw extends PureComponent {
             if (myCount <= 0) {
                 window.alert(`抽奖次数不足!`);
             } else {
-                // 开启转盘
-                this.setState({ isDrawing: false }, this.startRun);
+                // 开启转盘,開啟限制再次點擊抽獎
+                this.setState({ isDrawing: true }, this.startRun);
                 // 假装发了一个ajax请求
                 setTimeout(function () {
                     let endStopIndex = getRandomNum(1, 18);

@@ -97,6 +97,7 @@ function GetDrawBtn({ isClicking, onClick }) {
 function getRandomNum(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
 class Draw extends PureComponent {
     constructor(props) {
         super(props)
@@ -106,106 +107,89 @@ class Draw extends PureComponent {
             stepCount: getGift().length,
             // 剩余抽奖次数，接口返回
             myCount: 5,
-            // 转动开始位置默认：0，动态，可设置(>=0&&<stepCount)
-            startIndex: 0,
             // 转动激活位置默认：1，动态，可设置(>=1&&<=stepCount)
             activeIndex: 1,
             // 最终要停下的位置：接口返回(>=1&&<=stepCount)
             endStopIndex: 14,
             // 抽奖是否正在进行中
             isDrawing: false,
-            // 转速:fastSpeed,slowSpeed
-            fastSpeed: 100,
-            slowSpeed: 300,
-            // 已经，快速，慢速 转的圈数，至少转的圈数
-            ringNum: 0,
-            fastRingNum: 5,
-            slowRingNum: 1,
-            // 是否要启动中、慢
-            isNeedSlow: false,
-            // 递归内使用，控制定时器类型------
-            // speedType: "fast",
-        }
-        console.log(this.state)
+            // 转速   分别为最后0,1,2,3,4,5圈的转速
+            speed: [336, 168, 84, 42, 42, 42],
+            // 已经得到本次抽奖结果了
+            getResultFinish: false,
+        };
+        // 开启转盘的定时器
+        this.timer = null;
     }
-    componentDidMount() {
-        console.log(`mouted`)
+    componentWillUnmount() {
+        if (this.timer) {
+            clearTimeout(this.timer)
+        }
     }
     startDraw = e => {
         // 抽奖进行中禁止点击，抽奖次数<=0禁止点击
-        let { isDrawing, myCount, fastSpeed } = this.state
+        const _this = this;
+        let { isDrawing, myCount } = this.state;
         if (isDrawing) {
-            console.log(`抽奖进行中，请稍后再试`)
+            window.alert(`抽奖进行中，请稍后再试`);
         } else {
             if (myCount <= 0) {
-                console.log(`抽奖次数不足!`)
+                window.alert(`抽奖次数不足!`);
             } else {
-                // mock endStopIndex
-                let endIndex = getRandomNum(1, 18)
-                this.setState({ endStopIndex: endIndex })
-                console.log(`最终停留位置是：${endIndex}`)
-                // 正常抽奖，设置抽奖进行中状态
-                this.setState({ isDrawing: true })
-                const fastTimer = setInterval(() => {
-                    this.fastRotateMove(fastTimer)
-                }, fastSpeed)
+                // 开启转盘
+                this.setState({ isDrawing: false }, this.startRun);
+                // 假装发了一个ajax请求
+                setTimeout(function(){
+                    let endStopIndex = getRandomNum(1, 17);
+                    _this.setState({getResultFinish:true, endStopIndex});
+                }, 3000);
             }
         }
     }
-    fastRotateMove(timerId) {
-        let { stepCount, startIndex, ringNum, fastRingNum, slowSpeed } = this.state
-        // 可操作
-        startIndex++
-        // 重置激活位置
-        this.setState({ activeIndex: startIndex })
-        // 回到起点，转动圈数+1，完成快速圈数，启动中速或者慢速
-        if (startIndex === stepCount) {
-            ringNum = ringNum + 1
-            this.setState({ ringNum: ringNum })
-            if (ringNum === fastRingNum) {
-                clearInterval(timerId)
-                // 启动，  已经转的圈数重置为0
-                this.setState({ isNeedSlow: true, ringNum: 0 })
+    startRun(){
+        // 转一圈又一圈
+        // 直到知道结果，慢慢变慢速度，停在结果那;
+        // 转盘听到结果值时，重置初始值（{isDrawing:false, getResultFinish:false}）；
+        const _this = this;
+        const {stepCount, speed} = this.state;
+        let {activeIndex} = this.state;
+        /*
+        * Function addOneStep
+        * 奖品位置移动一小步
+        * @shouldContinue   {Booleans}  是否应该继续这个定时器
+        * @leftRound        {Number}    剩余几圈  3代表一个无限大的值，因为还不知道结果
+        */
+        function addOneStep(params) {
+            activeIndex += 1;
+            let {shouldContinue, leftRound} = params;
+
+            if(shouldContinue) {
+                // 如果到超过奖品个数，重置为1
+                if(activeIndex > stepCount) {
+                    if(_this.state.getResultFinish){
+                        leftRound -= 1;
+                    }
+                    activeIndex = 1;
+                }
+                // 如果已经到最后一圈了  且  已经到了制定要中奖的位置了  就不需要继续了
+                if(leftRound === 0 &&  activeIndex === _this.state.endStopIndex){
+                    shouldContinue = false;
+                }
+                _this.setState({activeIndex});
+                const nextParams = {
+                    shouldContinue,
+                    leftRound,
+                };
+                _this.timer = setTimeout(addOneStep.bind(this, nextParams), speed[leftRound]);
+            }else {
+                _this.setState({isDrawing:false, getResultFinish:false});
             }
-            // 
-            console.log(`转动了-${ringNum}-圈`)
         }
-        // 重置起点位置
-        startIndex = startIndex % stepCount
-        this.setState({ startIndex: startIndex })
-        // 开启慢速
-        if (this.state.isNeedSlow) {
-            console.log(`开始变慢`)
-            const slowTimerId = setInterval(() => {
-                this.slowRotateMove(slowTimerId)
-            }, slowSpeed)
-        }
-    }
-    slowRotateMove(timerId) {
-        let { stepCount, startIndex, ringNum, slowRingNum, endStopIndex, myCount } = this.state
-        startIndex++
-        // 重置激活位置
-        this.setState({ activeIndex: startIndex })
-        // 回到起点，转动圈数+1
-        if (startIndex === stepCount) {
-            ringNum = ringNum + 1
-            this.setState({ ringNum: ringNum })
-        }
-        // 至少转了，且位置与接口相同停止，恢复所有默认值
-        if (ringNum === slowRingNum && startIndex === endStopIndex) {
-            clearInterval(timerId)
-            // 当前剩余抽奖次数，由：接口返回
-            let currentCount = myCount - 1
-            this.setState({ isDrawing: false, ringNum: 0, isNeedSlow: false, myCount: currentCount })
-            console.log(`抽奖结束：停留在${this.state.endStopIndex},下次从${this.state.startIndex}开始转动`)
-        }
-        // 重置起点位置为上次位置
-        startIndex = startIndex % stepCount
-        this.setState({ startIndex: startIndex })
+        addOneStep({shouldContinue:true, leftRound:5});
     }
     render() {
         // readonly
-        const { giftList, activeIndex, isDrawing, myCount } = this.state
+        const { giftList, activeIndex, isDrawing, myCount } = this.state;
         const getIsActive = (item) => (
             item.id === activeIndex ? 1 : 0
         )

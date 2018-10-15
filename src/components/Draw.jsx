@@ -140,7 +140,7 @@ class Draw extends PureComponent {
                 this.setState({ isDrawing: false }, this.startRun);
                 // 假装发了一个ajax请求
                 setTimeout(function(){
-                    let endStopIndex = getRandomNum(1, 17);
+                    let endStopIndex = getRandomNum(1, 18);
                     _this.setState({getResultFinish:true, endStopIndex});
                 }, 3000);
             }

@@ -142,6 +142,7 @@ class Draw extends PureComponent {
                 setTimeout(function () {
                     let endStopIndex = getRandomNum(1, 18);
                     _this.setState({ getResultFinish: true, endStopIndex });
+                    console.log(`最終要停在:${_this.state.endStopIndex}`)
                 }, 3000);
             }
         }
@@ -173,6 +174,7 @@ class Draw extends PureComponent {
                 }
                 // 如果已经到最后一圈了  且  已经到了制定要中奖的位置了  就不需要继续了
                 if (leftRound === 0 && activeIndex === _this.state.endStopIndex) {
+                    console.log(`現在停在:${_this.state.endStopIndex}`)
                     shouldContinue = false;
                 }
                 _this.setState({ activeIndex });

@@ -124,7 +124,7 @@ class Draw extends PureComponent {
             // 是否要启动中、慢
             isNeedSlow: false,
             // 递归内使用，控制定时器类型------
-            speedType: "fast",
+            // speedType: "fast",
         }
         console.log(this.state)
     }
@@ -176,9 +176,9 @@ class Draw extends PureComponent {
         // 开启慢速
         if (this.state.isNeedSlow) {
             // 已经转的圈数
-            console.log(`开始中速`)
-            const middleTimer = setInterval(() => {
-                this.slowRotateMove(middleTimer)
+            console.log(`开始变慢`)
+            const slowTimerId = setInterval(() => {
+                this.slowRotateMove(slowTimerId)
             }, slowSpeed)
         }
     }

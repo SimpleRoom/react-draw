@@ -120,6 +120,7 @@ class Draw extends PureComponent {
         };
         // 开启转盘的定时器
         this.timer = null;
+        console.log()
     }
     componentWillUnmount() {
         if (this.timer) {
@@ -150,44 +151,77 @@ class Draw extends PureComponent {
     startRun() {
         // 转一圈又一圈
         // 直到知道结果，慢慢变慢速度，停在结果那;
-        // 转盘听到结果值时，重置初始值（{isDrawing:false, getResultFinish:false}）；
-        const _this = this;
-        const { stepCount, speed } = this.state;
-        let { activeIndex } = this.state;
+        // 转盘停到结果值时，重置初始值（{isDrawing:false, getResultFinish:false}）；
+        let { activeIndex, stepCount, speed } = this.state;
         /*
-        * Function addOneStep
-        * 奖品位置移动一小步
-        * @shouldContinue   {Booleans}  是否应该继续这个定时器
+        * Function moveOneStep
+        * 奖品位置移动一步
+        * @isContinue   {Booleans}  是否应该继续这个定时器
         * @leftRound        {Number}    剩余几圈  3代表一个无限大的值，因为还不知道结果
         */
-        function addOneStep(params) {
+        const moveOneStep = (params) => {
             activeIndex += 1;
-            let { shouldContinue, leftRound } = params;
-
-            if (shouldContinue) {
+            let { isContinue, leftRound } = params;
+            if (isContinue) {
                 // 如果到超过奖品个数，重置为1
                 if (activeIndex > stepCount) {
-                    if (_this.state.getResultFinish) {
+                    if (this.state.getResultFinish) {
                         leftRound -= 1;
                     }
                     activeIndex = 1;
                 }
                 // 如果已经到最后一圈了  且  已经到了制定要中奖的位置了  就不需要继续了
-                if (leftRound === 0 && activeIndex === _this.state.endStopIndex) {
-                    console.log(`現在停在:${_this.state.endStopIndex}`)
-                    shouldContinue = false;
+                if (leftRound === 0 && activeIndex === this.state.endStopIndex) {
+                    console.log(`現在停在:${this.state.endStopIndex}`)
+                    isContinue = false;
                 }
-                _this.setState({ activeIndex });
+                this.setState({ activeIndex });
                 const nextParams = {
-                    shouldContinue,
+                    isContinue,
                     leftRound,
                 };
-                _this.timer = setTimeout(addOneStep.bind(this, nextParams), speed[leftRound]);
+                this.timer = setTimeout(moveOneStep.bind(this, nextParams), speed[leftRound]);
             } else {
-                _this.setState({ isDrawing: false, getResultFinish: false });
+                this.setState({ isDrawing: false, getResultFinish: false });
+                clearTimeout(this.timer)
+                this.timer = null
+                console.log(this)
             }
         }
-        addOneStep({ shouldContinue: true, leftRound: 5 });
+        // moveOneStep({ isContinue: true, leftRound: 5 })
+        this.addOneStep({ isContinue: true, leftRound: 5 })
+    }
+    addOneStep = (params) => {
+        let { activeIndex, stepCount, speed } = this.state;
+        let { isContinue, leftRound } = params;
+        activeIndex += 1;
+        if (isContinue) {
+            // 如果到超过奖品个数，重置为1
+            if (activeIndex > stepCount) {
+                if (this.state.getResultFinish) {
+                    leftRound -= 1;
+                }
+                activeIndex = 1;
+            }
+            // 如果已经到最后一圈了  且  已经到了制定要中奖的位置了  就不需要继续了
+            if (leftRound === 0 && activeIndex === this.state.endStopIndex) {
+                console.log(`現在停在:${this.state.endStopIndex}`)
+                isContinue = false;
+            }
+            this.setState({ activeIndex });
+            const nextParams = {
+                isContinue,
+                leftRound,
+            };
+            this.timer = setTimeout(() => {
+                this.addOneStep(nextParams)
+            }, speed[leftRound]);
+        } else {
+            this.setState({ isDrawing: false, getResultFinish: false });
+            clearTimeout(this.timer)
+            this.timer = null
+            console.log(this)
+        }
     }
     render() {
         // readonly

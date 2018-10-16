@@ -115,8 +115,6 @@ class Draw extends PureComponent {
             isDrawing: false,
             // 转速   分别为最后0,1,2,3,4,5圈的转速
             speed: [336, 168, 84, 42, 42, 42],
-            // 已经得到本次抽奖结果了
-            getResultFinish: false,
         };
         // 开启转盘的定时器
         this.timer = null;
@@ -129,7 +127,6 @@ class Draw extends PureComponent {
     }
     startDraw = e => {
         // 抽奖进行中禁止点击，抽奖次数<=0禁止点击
-        const _this = this;
         let { isDrawing, myCount } = this.state;
         if (isDrawing) {
             window.alert(`抽奖进行中，请稍后再试`);
@@ -137,60 +134,39 @@ class Draw extends PureComponent {
             if (myCount <= 0) {
                 window.alert(`抽奖次数不足!`);
             } else {
-                // 开启转盘,開啟限制再次點擊抽獎
-                this.setState({ isDrawing: true }, this.startRun);
-                // 假装发了一个ajax请求
-                setTimeout(function () {
-                    let endStopIndex = getRandomNum(1, 18);
-                    _this.setState({ getResultFinish: true, endStopIndex });
-                    console.log(`最終要停在:${_this.state.endStopIndex}`)
-                }, 3000);
+                // 假装发了一个ajax请求：sucsess,catch,error
+                setTimeout(() => {
+                    let result = {
+                        ret_code: "0", //success
+                        endStopIndex: getRandomNum(1, 18),
+                    }
+                    // 是否正抽可能还需要接口来限制：如是否绑定手机号、、
+                    if (result.ret_code === "0") {
+                        let { endStopIndex } = result
+                        // 开启转盘,開啟限制再次點擊抽獎
+                        this.setState({ isDrawing: true, endStopIndex }, this.startRun)
+                        console.log(`最終要停在:${this.state.endStopIndex}`)
+                    } else if (result.ret_code === "error") { }
+                }, 300)
             }
         }
     }
     startRun() {
-        // 转一圈又一圈
-        // 直到知道结果，慢慢变慢速度，停在结果那;
-        // 转盘停到结果值时，重置初始值（{isDrawing:false, getResultFinish:false}）；
-        let { activeIndex, stepCount, speed } = this.state;
-        /*
-        * Function moveOneStep
-        * 奖品位置移动一步
-        * @isContinue   {Booleans}  是否应该继续这个定时器
-        * @leftRound        {Number}    剩余几圈  3代表一个无限大的值，因为还不知道结果
-        */
-        const moveOneStep = (params) => {
-            activeIndex += 1;
-            let { isContinue, leftRound } = params;
-            if (isContinue) {
-                // 如果到超过奖品个数，重置为1
-                if (activeIndex > stepCount) {
-                    if (this.state.getResultFinish) {
-                        leftRound -= 1;
-                    }
-                    activeIndex = 1;
-                }
-                // 如果已经到最后一圈了  且  已经到了制定要中奖的位置了  就不需要继续了
-                if (leftRound === 0 && activeIndex === this.state.endStopIndex) {
-                    console.log(`現在停在:${this.state.endStopIndex}`)
-                    isContinue = false;
-                }
-                this.setState({ activeIndex });
-                const nextParams = {
-                    isContinue,
-                    leftRound,
-                };
-                this.timer = setTimeout(moveOneStep.bind(this, nextParams), speed[leftRound]);
-            } else {
-                this.setState({ isDrawing: false, getResultFinish: false });
-                clearTimeout(this.timer)
-                this.timer = null
-                console.log(this)
-            }
-        }
-        // moveOneStep({ isContinue: true, leftRound: 5 })
-        this.addOneStep({ isContinue: true, leftRound: 5 })
+        const { speed } = this.state
+        // 总共需要转的圈数
+        let totalRound = speed.length - 1
+        this.addOneStep({ isContinue: true, leftRound: totalRound })
     }
+    /*
+    * 每次增加一步，满一圈，总圈数-1同时速度变慢，直到最后一圈停在指定位置
+    * 直到知道结果，慢慢变慢速度，停在结果那;
+    * 转盘停到结果值时，重置初始值（{isDrawing:false}）；
+    * 
+    * Function addOneStep
+    * 奖品位置移动一步
+    * @isContinue   {Booleans}  是否应该继续这个定时器
+    * @leftRound        {Number}    剩余几圈  3代表一个无限大的值，因为还不知道结果
+    */
     addOneStep = (params) => {
         let { activeIndex, stepCount, speed } = this.state;
         let { isContinue, leftRound } = params;
@@ -198,12 +174,11 @@ class Draw extends PureComponent {
         if (isContinue) {
             // 如果到超过奖品个数，重置为1
             if (activeIndex > stepCount) {
-                if (this.state.getResultFinish) {
-                    leftRound -= 1;
-                }
+                console.log(`转了${leftRound}圈`)
+                leftRound -= 1;
                 activeIndex = 1;
             }
-            // 如果已经到最后一圈了  且  已经到了制定要中奖的位置了  就不需要继续了
+            // 如果已经到最后一圈了  且  已经到了指定要中奖的位置了  就不需要继续了
             if (leftRound === 0 && activeIndex === this.state.endStopIndex) {
                 console.log(`現在停在:${this.state.endStopIndex}`)
                 isContinue = false;
@@ -217,10 +192,9 @@ class Draw extends PureComponent {
                 this.addOneStep(nextParams)
             }, speed[leftRound]);
         } else {
-            this.setState({ isDrawing: false, getResultFinish: false });
+            this.setState({ isDrawing: false });
             clearTimeout(this.timer)
             this.timer = null
-            console.log(this)
         }
     }
     render() {

@@ -152,10 +152,9 @@ class Draw extends PureComponent {
         }
     }
     startRun() {
-        const { speed } = this.state
         // 总共需要转的圈数
-        let totalRound = speed.length - 1
-        this.addOneStep({ isContinue: true, leftRound: totalRound })
+        let leftRound = this.state.speed.length - 1
+        this.addOneStep({ isContinue: true, leftRound })
     }
     /*
     * 每次增加一步，满一圈，总圈数-1同时速度变慢，直到最后一圈停在指定位置

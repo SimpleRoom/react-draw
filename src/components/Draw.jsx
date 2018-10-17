@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react"
-import styled from 'styled-components'
+import styled,{keyframes} from 'styled-components'
 
 import { getGift } from './DrawData'
 
@@ -10,6 +10,26 @@ const grayColor = "#999999"
 const activeColor = "#FFA488"
 const btnBg = "#33CCFF"
 const btnClickBg = "#FFA488"
+const minZindex = 30
+
+const zoomInDown = keyframes`
+    from {
+        opacity: 0;
+        -webkit-transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
+        transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
+        -webkit-animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+        animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+    }
+    60% {
+        opacity: 1;
+        -webkit-transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+        transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+        -webkit-animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+        animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+    }
+
+`;
+
 const ClearFix = styled.div`
     &:before,&:after{
         display:table;
@@ -82,11 +102,70 @@ const DrawBtn = styled.button`
     top:92px;
     z-index:10;
     background-color:${props => props.isClicking ? btnClickBg : btnBg};
+    box-shadow:1px 1px 20px 16px ${props =>props.isClicking? "#cc6140" :"#29b6e4" } inset;
     border-radius:5px;
     cursor:pointer;
     padding:0;
     font-size:45px;
     /* color:${props => props.isClicking ? grayColor : activeColor}; */
+`;
+// got dialog
+const DrawGiftDialog = styled(ClearFix)`
+    position:absolute;
+    width:100%;
+    height:100%;
+    left:0;
+    top:0;
+    display:${props => props.show ? "block" : "none"};
+    background:rgba(0,0,0,.7);
+    z-index:${minZindex + 15};
+`;
+
+const GotGift = styled.div`
+    width:362px;
+    height:264px;
+    margin:0 auto;
+    margin-top:120px;
+    background-color: #FFC93C;
+    border-radius: 12px;
+    box-shadow: 1px 1px 20px 16px #FFA60D inset;
+    padding-top:60px;
+    animation: ${zoomInDown} 1.4s;
+    position:relative;
+    
+    .got-img{
+        display:block;
+        width:60px;
+        height:60px;
+        margin:0 auto;
+        background-image:url(${props => props.giftSrc});
+        background-color:#ffffff;
+        background-size:100% 100%;
+        border-radius: 12px;
+    }
+    .got-name,.got-count{
+        text-align:center;
+    }
+    .got-name{
+        margin-top:10px;
+    }
+`;
+
+const CloseDialogBtn = styled.button`
+    outline:none;
+    border:0;
+    display:block;
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background-image: url('/images/close.svg');
+    background-size: auto 100%;
+    background-color:transparent;
+    cursor:pointer;
+
+    left:50%;
+    transform:translateX(-50%);
+    top:-60px;
 `;
 
 function GetDrawBtn({ isClicking, onClick }) {
@@ -115,6 +194,9 @@ class Draw extends PureComponent {
             isDrawing: false,
             // 转速   分别为最后0,1,2,3,4,5圈的转速
             speed: [336, 168, 84, 42, 42, 42],
+            // 抽獎結果的禮物名字
+            showDialog: false,
+            gotGift: null,
         };
         // 开启转盘的定时器
         this.timer = null;
@@ -129,10 +211,10 @@ class Draw extends PureComponent {
         // 抽奖进行中禁止点击，抽奖次数<=0禁止点击
         let { isDrawing, myCount } = this.state;
         if (isDrawing) {
-            window.alert(`抽奖进行中，请稍后再试`);
+            console.log(`抽奖进行中，请稍后再试`);
         } else {
             if (myCount <= 0) {
-                window.alert(`抽奖次数不足!`);
+                console.log(`抽奖次数不足!`);
             } else {
                 // 假装发了一个ajax请求：sucsess,catch,error
                 setTimeout(() => {
@@ -143,8 +225,9 @@ class Draw extends PureComponent {
                     // 是否正抽可能还需要接口来限制：如是否绑定手机号、、
                     if (result.ret_code === "0") {
                         let { endStopIndex } = result
+                        let myCount = this.state.myCount -1
                         // 开启转盘,開啟限制再次點擊抽獎
-                        this.setState({ isDrawing: true, endStopIndex }, this.startRun)
+                        this.setState({ isDrawing: true, endStopIndex , myCount }, this.startRun)
                         console.log(`最終要停在:${this.state.endStopIndex}`)
                     } else if (result.ret_code === "error") { }
                 }, 300)
@@ -194,11 +277,16 @@ class Draw extends PureComponent {
             this.setState({ isDrawing: false });
             clearTimeout(this.timer)
             this.timer = null
+            let gotGift = this.state.giftList[this.state.endStopIndex - 1]
+            this.setState({ gotGift, showDialog: true })
         }
+    }
+    hideGotDialog = () => {
+        this.setState({ showDialog: false })
     }
     render() {
         // readonly
-        const { giftList, activeIndex, isDrawing, myCount } = this.state;
+        const { giftList, activeIndex, isDrawing, showDialog, gotGift, myCount } = this.state;
         const getIsActive = (item) => (
             item.id === activeIndex ? 1 : 0
         )
@@ -207,6 +295,18 @@ class Draw extends PureComponent {
                 <DrawWrap>
                     <GrawTitle>抽奖次数：{myCount}</GrawTitle>
                     <DrawBg>
+                        <DrawGiftDialog show={showDialog} >
+                            {
+                                showDialog ? <GotGift giftSrc={gotGift.icon}>
+                                    <CloseDialogBtn onClick={this.hideGotDialog}></CloseDialogBtn>
+                                    <div className="got-img"></div>
+                                    <p className="got-name">{gotGift.name}</p>
+                                    {
+                                        gotGift.count ? <p className="got-count">{gotGift.count}</p> : null
+                                    }
+                                </GotGift> : null
+                            }
+                        </DrawGiftDialog>
                         <GiftBox>
                             {
                                 giftList.map((gift, index) =>

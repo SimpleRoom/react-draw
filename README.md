@@ -1,74 +1,12 @@
-# 完善思路 
+#### React 方形转盘抽奖
 
-  我总感觉我哪里好像写错了
++ <code>npm install</code>
++ <code>npm run start</code>
++ <code>npm run build</code>
++ [DEMO](https://wjf444128852.github.io/demo/react/draw)
 
-## 第一版完善目标  基于本地抽奖的完善
+#### 思路
 
-
-- 根据变动思路，优化state对象
-- 合并优化fastRotateMove、slowRotateMove 两个函数体；
-- 确定清除setInterval、setTimeout之类的定时器；
-- 增加模拟接口，方便到时候直接对接现实场景；
-- 修复一些小细节；  
-
-
-#### 根据变动思路，优化state对象
-
-delete  不在需要的
-
-	// 转动开始位置默认：0，动态，可设置(>=0&&<stepCount)
-	startIndex: 0,
-	// 已经，快速，慢速 转的圈数，至少转的圈数
-    ringNum: 0,
-    fastRingNum: 5,
-    slowRingNum: 1,
-	// 是否要启动慢速
-	isNeedSlow：false
-
-edit   改动的
-	
-	// 转速   分别为最后0,1,2,3,4,5圈的转速
-	speed: [250, 125, 66, 30, 30, 30],
-	// 已经得到本次抽奖结果了
-	getResultFinish: false,
-
-
-#### 合并优化fastRotateMove、slowRotateMove 两个函数体；
-	
-	合并后的函数名为：startRun；
-	
-	具体看代码；
-
-#### 确定清除setInterval、setTimeout之类的定时器；
-
-	constructor(props){
-		...
-		this.timer = null;
-	}
-
-	componentWillUnmount() {
-        if (this.timer) {
-            clearTimeout(this.timer)
-        }
-    }
-
-
-#### 修复一些小细节
-	
-之前代码中，有类似这样的，建议一次setState
-
-	this.setState({ endStopIndex: endIndex })
-	// 正常抽奖，设置抽奖进行中状态
-	this.setState({ isDrawing: true })
-	
-	个人直觉是觉得下面这种会更好，不一定对，说不定我是错的
-	
-	this.setState({endStopIndex, isDrawing});
-
-早上讨论的随机值
-
-	let endIndex = getRandomNum(1, 18)；
-	
-	改为了
-	
-	let endIndex = getRandomNum(1, 17)；
++ 1、根据接口判断用户是否有权限参与，是否有抽奖次数
++ 2、有权限则开启动画，开启的同时限制用户在动画未结束再次抽奖，根据返回礼物ID得出最后要停下的位置
++ 3、动画：每次移动一步，同时重置选中状态，到达终点起点重置为初始位置，同时圈数减一，开始下一圈，同时定时器时间增加，转速语速变慢

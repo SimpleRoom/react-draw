@@ -1,5 +1,5 @@
 import React, { PureComponent } from "react"
-import styled,{keyframes} from 'styled-components'
+import styled, { keyframes } from 'styled-components'
 
 import { getGift } from './DrawData'
 
@@ -102,7 +102,7 @@ const DrawBtn = styled.button`
     top:92px;
     z-index:10;
     background-color:${props => props.isClicking ? btnClickBg : btnBg};
-    box-shadow:1px 1px 20px 16px ${props =>props.isClicking? "#cc6140" :"#29b6e4" } inset;
+    box-shadow:1px 1px 20px 16px ${props => props.isClicking ? "#cc6140" : "#29b6e4"} inset;
     border-radius:5px;
     cursor:pointer;
     padding:0;
@@ -225,9 +225,9 @@ class Draw extends PureComponent {
                     // 是否正抽可能还需要接口来限制：如是否绑定手机号、、
                     if (result.ret_code === "0") {
                         let { endStopIndex } = result
-                        let myCount = this.state.myCount -1
+                        let myCount = this.state.myCount - 1
                         // 开启转盘,開啟限制再次點擊抽獎
-                        this.setState({ isDrawing: true, endStopIndex , myCount }, this.startRun)
+                        this.setState({ isDrawing: true, endStopIndex, myCount }, this.startRun)
                         console.log(`最終要停在:${this.state.endStopIndex}`)
                     } else if (result.ret_code === "error") { }
                 }, 300)

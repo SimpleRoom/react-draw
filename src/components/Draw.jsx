@@ -200,6 +200,11 @@ class Draw extends PureComponent {
         };
         // 开启转盘的定时器
         this.timer = null;
+        this.tipsList = {
+            success: "恭喜您中奖了",
+            warning: "抱歉抽奖进行中，稍后再试",
+            error: "抽奖次数不足",
+        }
         console.log()
     }
     componentWillUnmount() {
@@ -211,18 +216,10 @@ class Draw extends PureComponent {
         // 抽奖进行中禁止点击，抽奖次数<=0禁止点击
         let { isDrawing, myCount } = this.state;
         if (isDrawing) {
-            this.setState({
-                isShowMessage: true,
-                tips: "抽奖进行中，请稍后再试",
-                messageType: "warning",
-            })
+            this.showMessageTip("warning");
         } else {
             if (myCount <= 0) {
-                this.setState({
-                    isShowMessage: true,
-                    tips: "抽奖次数不足",
-                    messageType: "error",
-                })
+                this.showMessageTip("error");
             } else {
                 // 假装发了一个ajax请求：sucsess,catch,error
                 setTimeout(() => {
@@ -241,6 +238,22 @@ class Draw extends PureComponent {
                 }, 300)
             }
         }
+    }
+    showMessageTip(messageType) {
+        let tips = this.tipsList[messageType]
+        this.setState({
+            isShowMessage: true,
+            messageType,
+            tips,
+        });
+        // 停留3秒自动清除
+        this.timer = setTimeout(() => {
+            this.setState({
+                isShowMessage: false,
+                messageType: null,
+                tips: null,
+            });
+        }, 3000)
     }
     startRun() {
         // 总共需要转的圈数
@@ -289,10 +302,8 @@ class Draw extends PureComponent {
                 isDrawing: false,
                 gotGift,
                 showDialog: true,
-                isShowMessage: true,
-                tips: "恭喜您中奖了",
-                messageType: "error",
             })
+            this.showMessageTip("success")
         }
     }
     hideGotDialog = () => {

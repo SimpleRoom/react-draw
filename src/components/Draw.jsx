@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react"
 import styled, { keyframes } from 'styled-components'
-
+import Message from "./Message"
 import { getGift } from './DrawData'
 
 // common
@@ -15,19 +15,14 @@ const minZindex = 30
 const zoomInDown = keyframes`
     from {
         opacity: 0;
-        -webkit-transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
         transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
-        -webkit-animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
         animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
     }
     60% {
         opacity: 1;
-        -webkit-transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
         transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
-        -webkit-animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
         animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
     }
-
 `;
 
 const ClearFix = styled.div`
@@ -50,12 +45,12 @@ const DrawWrap = styled.div`
 `;
 const DrawBg = styled(ClearFix)`
     position:relative;
-    width:596px;
-    height:504px;
+    width:604px;
+    height:512px;
     padding:24px;
     margin:0 auto;
     border-radius:5px;
-    border:1px solid ${bgBorderColor};
+    border:5px solid ${bgBorderColor};
     background-color:${bgColor};
 `;
 const GiftBox = styled(ClearFix)`
@@ -117,17 +112,18 @@ const DrawGiftDialog = styled(ClearFix)`
     left:0;
     top:0;
     display:${props => props.show ? "block" : "none"};
-    background:rgba(0,0,0,.7);
+    background:rgba(0,0,0,.5);
     z-index:${minZindex + 15};
+    cursor:pointer;
 `;
 
 const GotGift = styled.div`
     width:362px;
-    height:264px;
+    height:270px;
     margin:0 auto;
-    margin-top:120px;
+    margin-top:116px;
     background-color: #FFC93C;
-    border-radius: 12px;
+    border-radius: 5px;
     box-shadow: 1px 1px 20px 16px #FFA60D inset;
     padding-top:60px;
     animation: ${zoomInDown} 1.4s;
@@ -197,6 +193,10 @@ class Draw extends PureComponent {
             // 抽獎結果的禮物名字
             showDialog: false,
             gotGift: null,
+            // 消息提示框
+            isShowMessage: false,
+            tips: null,
+            messageType: null,
         };
         // 开启转盘的定时器
         this.timer = null;
@@ -211,10 +211,18 @@ class Draw extends PureComponent {
         // 抽奖进行中禁止点击，抽奖次数<=0禁止点击
         let { isDrawing, myCount } = this.state;
         if (isDrawing) {
-            console.log(`抽奖进行中，请稍后再试`);
+            this.setState({
+                isShowMessage: true,
+                tips: "抽奖进行中，请稍后再试",
+                messageType: "warning",
+            })
         } else {
             if (myCount <= 0) {
-                console.log(`抽奖次数不足!`);
+                this.setState({
+                    isShowMessage: true,
+                    tips: "抽奖次数不足",
+                    messageType: "error",
+                })
             } else {
                 // 假装发了一个ajax请求：sucsess,catch,error
                 setTimeout(() => {
@@ -274,11 +282,17 @@ class Draw extends PureComponent {
                 this.addOneStep(nextParams)
             }, speed[leftRound]);
         } else {
-            this.setState({ isDrawing: false });
             clearTimeout(this.timer)
             this.timer = null
             let gotGift = this.state.giftList[this.state.endStopIndex - 1]
-            this.setState({ gotGift, showDialog: true })
+            this.setState({
+                isDrawing: false,
+                gotGift,
+                showDialog: true,
+                isShowMessage: true,
+                tips: "恭喜您中奖了",
+                messageType: "error",
+            })
         }
     }
     hideGotDialog = () => {
@@ -286,12 +300,26 @@ class Draw extends PureComponent {
     }
     render() {
         // readonly
-        const { giftList, activeIndex, isDrawing, showDialog, gotGift, myCount } = this.state;
+        const { giftList,
+            activeIndex,
+            isDrawing,
+            showDialog,
+            gotGift,
+            myCount,
+            isShowMessage,
+            tips,
+            messageType } = this.state;
         const getIsActive = (item) => (
             item.id === activeIndex ? 1 : 0
         )
         return (
             <div className="draw-box">
+                {/* tipsBox */}
+                {
+                    isShowMessage ? <Message isShow={isShowMessage} message={tips} type={messageType}></Message> : null
+                }
+
+                {/* main */}
                 <DrawWrap>
                     <GrawTitle>抽奖次数：{myCount}</GrawTitle>
                     <DrawBg>
@@ -302,7 +330,7 @@ class Draw extends PureComponent {
                                     <div className="got-img"></div>
                                     <p className="got-name">{gotGift.name}</p>
                                     {
-                                        gotGift.count ? <p className="got-count">{gotGift.count}</p> : null
+                                        gotGift.count ? <p className="got-count">{gotGift.count}个</p> : null
                                     }
                                 </GotGift> : null
                             }

@@ -18,54 +18,34 @@ const DefaultFontColor = "#31708f";
  *  default shake
  *
  * */
-const shake = keyframes`
-    from, to {
-        transform: translate3d(0, 0, 0);
+
+const bounce = keyframes`
+    from, 20%, 53%, 80%, to {
+        animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        transform: translate3d(0,0,0);
     }
-    10%, 30%, 50%, 70%, 90% {
-        transform: translate3d(-10px, 0, 0);
+    40%, 43% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: translate3d(0, -30px, 0);
     }
-    20%, 40%, 60%, 80% {
-        transform: translate3d(10px, 0, 0);
+    70% {
+        animation-timing-function: cubic-bezier(0.755, 0.050, 0.855, 0.060);
+        transform: translate3d(0, -15px, 0);
+    }
+    90% {
+        transform: translate3d(0,-4px,0);
     }
 `;
 const animationList = {
-    zoomInDown: keyframes`
-        from {
-            opacity: 0;
-            transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
-            animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+    shake:keyframes`
+        from, to {
+            transform: translate3d(0, 0, 0);
         }
-        60% {
-            opacity: 1;
-            transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
-            animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+        10%, 30%, 50%, 70%, 90% {
+            transform: translate3d(-10px, 0, 0);
         }
-    `,
-    bounceIn: keyframes`
-        from, 20%, 40%, 60%, 80%, to {
-            animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
-        }
-        0% {
-            opacity: 0;
-            transform: scale3d(.3, .3, .3);
-        }
-        20% {
-            transform: scale3d(1.1, 1.1, 1.1);
-        }
-        40% {
-            transform: scale3d(.9, .9, .9);
-        }
-        60% {
-            opacity: 1;
-            transform: scale3d(1.03, 1.03, 1.03);
-        }
-        80% {
-            transform: scale3d(.97, .97, .97);
-        }
-        to {
-            opacity: 1;
-            transform: scale3d(1, 1, 1);
+        20%, 40%, 60%, 80% {
+            transform: translate3d(10px, 0, 0);
         }
     `,
     rubberBand: keyframes`
@@ -114,6 +94,214 @@ const animationList = {
             transform: none;
         }
     `,
+    bounceIn: keyframes`
+        from, 20%, 40%, 60%, 80%, to {
+            animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        }
+        0% {
+            opacity: 0;
+            transform: scale3d(.3, .3, .3);
+        }
+        20% {
+            transform: scale3d(1.1, 1.1, 1.1);
+        }
+        40% {
+            transform: scale3d(.9, .9, .9);
+        }
+        60% {
+            opacity: 1;
+            transform: scale3d(1.03, 1.03, 1.03);
+        }
+        80% {
+            transform: scale3d(.97, .97, .97);
+        }
+        to {
+            opacity: 1;
+            transform: scale3d(1, 1, 1);
+        }
+    `,
+    bounceInDown: keyframes`
+        from, 60%, 75%, 90%, to {
+            animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        }
+        0% {
+            opacity: 0;
+            transform: translate3d(0, -2500px, 0);
+        }
+        60% {
+            opacity: 1;
+            transform: translate3d(0, 25px, 0);
+        }
+        75% {
+            transform: translate3d(0, -10px, 0);
+        }
+        90% {
+            transform: translate3d(0, 5px, 0);
+        }
+        to {
+            transform: none;
+        }
+    `,
+    bounceInLeft: keyframes`
+        from, 60%, 75%, 90%, to {
+            animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        }
+        0% {
+            opacity: 0;
+            transform: translate3d(-3000px, 0, 0);
+        }
+        60% {
+            opacity: 1;
+            transform: translate3d(25px, 0, 0);
+        }
+        75% {
+            transform: translate3d(-10px, 0, 0);
+        }
+        90% {
+            transform: translate3d(5px, 0, 0);
+        }
+        to {
+            transform: none;
+        }
+    `,
+    bounceInRight: keyframes`
+        from, 60%, 75%, 90%, to {
+            animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        }
+        from {
+            opacity: 0;
+            transform: translate3d(3000px, 0, 0);
+        }
+        60% {
+            opacity: 1;
+            transform: translate3d(-25px, 0, 0);
+        }
+        75% {
+            transform: translate3d(10px, 0, 0);
+        }
+        90% {
+            transform: translate3d(-5px, 0, 0);
+        }
+        to {
+            transform: none;
+        }
+    `,
+    bounceInUp: keyframes`
+        from, 60%, 75%, 90%, to {
+            animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        }
+        from {
+            opacity: 0;
+            transform: translate3d(0, 3000px, 0);
+        }
+        60% {
+            opacity: 1;
+            transform: translate3d(0, -20px, 0);
+        }
+        75% {
+            transform: translate3d(0, 10px, 0);
+        }
+        90% {
+            transform: translate3d(0, -5px, 0);
+        }
+        to {
+            transform: translate3d(0, 0, 0);
+        }
+    `,
+    slideInUp: keyframes`
+        from {
+            transform: translate3d(0, 100%, 0);
+            visibility: visible;
+        }
+        to {
+            transform: translate3d(0, 0, 0);
+        }
+    `,
+    slideOutDown: keyframes`
+        from {
+	        transform: translate3d(0, 0, 0);
+        }
+        to {
+            visibility: hidden;
+            transform: translate3d(0, 100%, 0);
+        }
+    `,
+    slideInLeft: keyframes`
+        from {
+            transform: translate3d(-100%, 0, 0);
+            visibility: visible;
+        }
+        to {
+            transform: translate3d(0, 0, 0);
+        }
+    `,
+    slideInRight: keyframes`
+        from {
+            transform: translate3d(100%, 0, 0);
+            visibility: visible;
+        }
+        to {
+            transform: translate3d(0, 0, 0);
+        }
+    `,
+    zoomIn: keyframes`
+        from {
+            opacity: 0;
+            transform: scale3d(.3, .3, .3);
+        }
+        50% {
+            opacity: 1;
+        }
+    `,
+    zoomInDown: keyframes`
+        from {
+            opacity: 0;
+            transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
+            animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+        }
+        60% {
+            opacity: 1;
+            transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+            animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+        }
+    `,
+    zoomInLeft: keyframes`
+        from {
+            opacity: 0;
+            transform: scale3d(.1, .1, .1) translate3d(-1000px, 0, 0);
+            animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+        }
+        60% {
+            opacity: 1;
+            transform: scale3d(.475, .475, .475) translate3d(10px, 0, 0);
+            animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+        }
+    `,
+    zoomInRight: keyframes`
+        from {
+            opacity: 0;
+            transform: scale3d(.1, .1, .1) translate3d(1000px, 0, 0);
+            animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+        }
+        60% {
+            opacity: 1;
+            transform: scale3d(.475, .475, .475) translate3d(-10px, 0, 0);
+            animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+        }
+    `,
+    zoomInUp: keyframes`
+        from {
+            opacity: 0;
+            transform: scale3d(.1, .1, .1) translate3d(0, 1000px, 0);
+            animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+        }
+        60% {
+            opacity: 1;
+            transform: scale3d(.475, .475, .475) translate3d(0, -60px, 0);
+            animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+        }
+    `,
+
 }
 
 // MessageBox
@@ -121,6 +309,8 @@ const MessageBox = styled(ClearFix)`
     text-align:center;
     position:fixed;
     width:100%;
+    left:0;
+    top:20px;
     z-index:${maxZindex};
 `;
 const MessageContent = styled.div`
@@ -132,8 +322,7 @@ const MessageContent = styled.div`
     background-color:${props => props.bgColor ? props.bgColor : DefaultBg};
     border-color:${props => props.borderColor ? props.borderColor : DefaultBorderColor};
     display:${props => props.isHasMessage ? "block" : "none"};
-    animation: ${props => props.animationType ? props.animationType : shake} 1.4s;
-
+    animation: ${props => props.animationName ? props.animationName : bounce} 1.4s;
     display:inline-block;
 `;
 
@@ -190,13 +379,18 @@ class AlertBox extends PureComponent {
         /**
          * @param{message}          String
          * @param{type}             [String]: success,warning,error...
-         * @param{animationType}    [String]
+         * @param{animation}        [String]
+         * animation support list total(32): default=>bounce
+         * shake ,rubberBand, wobble,
+         * bounceIn, bounceInDown, bounceInLeft, bounceInRight, bounceInUp,
+         * slideInUp, slideOutDown, slideInLeft, slideInRight,
+         * zoomIn, zoomInDown, zoomInLeft, zoomInRight, zoomInUp,
          *
          **/
         this.state = {
             message: null,
             type: null,
-            animationType: null,
+            animation: null,
             delayHideTime: 5000,
         }
         this.timerId = null
@@ -209,7 +403,7 @@ class AlertBox extends PureComponent {
             return {
                 message: nextProps.message,
                 type: nextProps.type,
-                animationType: nextProps.animationType,
+                animation: nextProps.animation,
             }
         }
         return null;
@@ -219,6 +413,7 @@ class AlertBox extends PureComponent {
     componentDidMount() {
         this.autoDestoryAlert()
     }
+
     //
     componentWillUnmount() {
         if (this.timerId) {
@@ -242,7 +437,7 @@ class AlertBox extends PureComponent {
     }
 
     render() {
-        const {message, type, animationType} = this.state;
+        const {message, type, animation} = this.state;
         // message style
         const getMessageStyle = (currentType) => {
             if (currentType) {
@@ -251,8 +446,11 @@ class AlertBox extends PureComponent {
         };
         // alert join animation
         const getAnimation = (type) => {
+            console.log(animationList[type])
             return animationList[type]
         }
+        let tt = getAnimation(animation)
+        console.log(tt, animationList);
         /**
          *  ...getMessageType(type)代替
          *  bgColor={getMessageType(type).bgColor}
@@ -263,7 +461,7 @@ class AlertBox extends PureComponent {
         return (
             <div className="message-wrap">
                 <MessageBox>
-                    <MessageContent animationType={getAnimation(animationType)}
+                    <MessageContent animationName={getAnimation(animation)}
                                     isHasMessage={message} {...getMessageStyle(type)}>
                         {message}
                         <CloseButton onClick={this.destroyAlert}>×</CloseButton>

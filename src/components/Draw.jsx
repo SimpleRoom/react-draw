@@ -41,6 +41,7 @@ const GrawTitle = styled.div`
 `;
 const DrawWrap = styled.div`
     width:640px;
+    padding-top:80px;
     margin:0 auto;
 `;
 const DrawBg = styled(ClearFix)`
@@ -196,15 +197,24 @@ class Draw extends PureComponent {
             // 消息提示框
             message: null,
             messageType: null,
-            animationType: "rubberBand",
+            animationName: null,
         };
         // 开启转盘的定时器
         this.timer = null;
         //alert message list
         this.messageInfo = {
-            success: "恭喜您中奖了!",
-            warning: "抽奖进行中，请稍后再试!",
-            error: "抽奖次数不足,抓紧去完成任务获得抽奖资格吧~",
+            success: {
+                message: "恭喜您中奖了!",
+                animationName: null
+            },
+            warning: {
+                message: "抽奖进行中，请稍后再试!",
+                animationName: "slideInLeft"
+            },
+            error: {
+                message: "抽奖次数不足,抓紧去完成任务获得抽奖资格吧~",
+                animationName: "shake",
+            },
         }
     }
 
@@ -301,8 +311,8 @@ class Draw extends PureComponent {
     }
 
     alertMessage(messageType) {
-        let message = this.messageInfo[messageType];
-        this.setState({messageType, message});
+        let {message, animationName} = this.messageInfo[messageType];
+        this.setState({messageType, message, animationName});
     }
 
     //移除alert的回调
@@ -325,7 +335,7 @@ class Draw extends PureComponent {
             myCount,
             message,
             messageType,
-            animationType,
+            animationName,
         } = this.state;
         const getIsActive = (item) => (
             item.id === activeIndex ? 1 : 0
@@ -337,7 +347,7 @@ class Draw extends PureComponent {
                     message ?
                         <AlertBox message={message}
                                   type={messageType}
-                                  animationType={animationType}
+                                  animation={animationName}
                                   hideAlert={this.removeAlert}></AlertBox> : null
                 }
 

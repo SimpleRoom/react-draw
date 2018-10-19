@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react"
 import styled, { keyframes } from 'styled-components'
-import Message from "./Message"
+import Alert from "./Alert"
 import { getGift } from './DrawData'
 
 // common
@@ -194,32 +194,48 @@ class Draw extends PureComponent {
             showDialog: false,
             gotGift: null,
             // 消息提示框
-            isShowMessage: false,
-            tips: null,
+            message:null,
             messageType: null,
         };
         // 开启转盘的定时器
         this.timer = null;
-        this.tipsList = {
+        this.messageList = {
             success: "恭喜您中奖了",
             warning: "抱歉抽奖进行中，稍后再试",
             error: "抽奖次数不足",
         }
         console.log()
     }
+    componentDidMount(){
+        console.log(`mounted`)
+    }
     componentWillUnmount() {
         if (this.timer) {
             clearTimeout(this.timer)
         }
     }
+    alertMessage(messageType) {
+        let message = this.messageList[messageType];
+        this.setState({
+            messageType,
+            message,
+        });
+        // 停留3秒自动清除
+        this.timer = setTimeout(() => {
+            this.setState({
+                messageType: null,
+                message: null,
+            });
+        }, 3000)
+    }
     startDraw = e => {
         // 抽奖进行中禁止点击，抽奖次数<=0禁止点击
         let { isDrawing, myCount } = this.state;
         if (isDrawing) {
-            this.showMessageTip("warning");
+            this.alertMessage("warning");
         } else {
             if (myCount <= 0) {
-                this.showMessageTip("error");
+                this.alertMessage("error");
             } else {
                 // 假装发了一个ajax请求：sucsess,catch,error
                 setTimeout(() => {
@@ -229,35 +245,19 @@ class Draw extends PureComponent {
                     }
                     // 是否正抽可能还需要接口来限制：如是否绑定手机号、、
                     if (result.ret_code === "0") {
-                        let { endStopIndex } = result
-                        let myCount = this.state.myCount - 1
+                        let { endStopIndex } = result;
+                        let myCount = this.state.myCount - 1;
                         // 开启转盘,開啟限制再次點擊抽獎
-                        this.setState({ isDrawing: true, endStopIndex, myCount }, this.startRun)
+                        this.setState({ isDrawing: true, endStopIndex, myCount }, this.startRun);
                         console.log(`最終要停在:${this.state.endStopIndex}`)
                     } else if (result.ret_code === "error") { }
                 }, 300)
             }
         }
     }
-    showMessageTip(messageType) {
-        let tips = this.tipsList[messageType]
-        this.setState({
-            isShowMessage: true,
-            messageType,
-            tips,
-        });
-        // 停留3秒自动清除
-        this.timer = setTimeout(() => {
-            this.setState({
-                isShowMessage: false,
-                messageType: null,
-                tips: null,
-            });
-        }, 3000)
-    }
     startRun() {
         // 总共需要转的圈数
-        let leftRound = this.state.speed.length - 1
+        let leftRound = this.state.speed.length - 1;
         this.addOneStep({ isContinue: true, leftRound })
     }
     /*
@@ -277,13 +277,13 @@ class Draw extends PureComponent {
         if (isContinue) {
             // 如果到超过奖品个数，重置为1
             if (activeIndex > stepCount) {
-                console.log(`转了${leftRound}圈`)
+                console.log(`转了${leftRound}圈`);
                 leftRound -= 1;
                 activeIndex = 1;
             }
             // 如果已经到最后一圈了  且  已经到了指定要中奖的位置了  就不需要继续了
             if (leftRound === 0 && activeIndex === this.state.endStopIndex) {
-                console.log(`現在停在:${this.state.endStopIndex}`)
+                console.log(`現在停在:${this.state.endStopIndex}`);
                 isContinue = false;
             }
             this.setState({ activeIndex });
@@ -295,15 +295,15 @@ class Draw extends PureComponent {
                 this.addOneStep(nextParams)
             }, speed[leftRound]);
         } else {
-            clearTimeout(this.timer)
-            this.timer = null
-            let gotGift = this.state.giftList[this.state.endStopIndex - 1]
+            clearTimeout(this.timer);
+            this.timer = null;
+            let gotGift = this.state.giftList[this.state.endStopIndex - 1];
             this.setState({
                 isDrawing: false,
                 gotGift,
                 showDialog: true,
-            })
-            this.showMessageTip("success")
+            });
+            this.alertMessage("success")
         }
     }
     hideGotDialog = () => {
@@ -317,8 +317,7 @@ class Draw extends PureComponent {
             showDialog,
             gotGift,
             myCount,
-            isShowMessage,
-            tips,
+            message,
             messageType } = this.state;
         const getIsActive = (item) => (
             item.id === activeIndex ? 1 : 0
@@ -327,7 +326,7 @@ class Draw extends PureComponent {
             <div className="draw-box">
                 {/* tipsBox */}
                 {
-                    isShowMessage ? <Message isShow={isShowMessage} message={tips} type={messageType}></Message> : null
+                    message ? <Alert message={message} type={messageType}></Alert> : null
                 }
 
                 {/* main */}

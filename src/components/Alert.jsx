@@ -8,7 +8,12 @@ const ClearFix = styled.div`
         clear:both;
     }
 `;
-const maxZindex = 999
+const maxZindex = 999;
+const DefaultBg = "#d9edf7";
+const DefaultBorderColor = "#bce8f1";
+const DefaultFontColor = "#31708f";
+
+//animation
 const zoomInDown = keyframes`
     from {
         opacity: 0;
@@ -33,10 +38,10 @@ const MessageContent = styled.div`
     border:1px solid transparent;
     border-radius:4px;
     margin:0 auto;
-    color:${props => props.fontColor};
-    background-color:${props => props.bgColor};
-    border-color:${props => props.borderColor};
-    display:${props => props.isShow ? "block" : "none"};
+    color:${props => props.fontColor ? props.fontColor : DefaultFontColor};
+    background-color:${props => props.bgColor ? props.bgColor : DefaultBg};
+    border-color:${props => props.borderColor ? props.borderColor : DefaultBorderColor};
+    display:${props => props.isHasMessage ? "block" : "none"};
     animation: ${zoomInDown} 1.4s;
 
     display:inline-block;
@@ -65,7 +70,12 @@ const CloseButton = styled.button`
     }
 `;
 
-const TypeList = {
+const MessageStyles = {
+    default: {
+        bgColor: "#d9edf7",
+        borderColor: "#bce8f1",
+        fontColor: "#31708f",
+    },
     success: {
         bgColor: "#dff0d8",
         borderColor: "#d6e9c6",
@@ -82,32 +92,28 @@ const TypeList = {
         fontColor: "#a94442",
     },
 }
-class Message extends PureComponent {
+class Alert extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
-            isShow: false,
             message: null,
             type: null,
         }
-        // type:success,warning,error
+        // type:success,warning,error...
         this.timerId = null
     }
     // 自动监听父组件传递的props自动更新当前状态，动画方便:ex <Transition>
     static getDerivedStateFromProps(nextProps, prevState) {
         console.log(nextProps)
         if (nextProps.message !== prevState.message) {
-            // 是否要销毁
-            // Message.destroyMessage(nextProps);
             return {
-                isShow: nextProps.isShow,
                 message: nextProps.message,
                 type: nextProps.type,
             }
         }
         return null;
     }
-    // isShow为true才挂载
+    // message存在才挂载
     componentDidMount() {
         // this.destroyMessage()
     }
@@ -117,12 +123,11 @@ class Message extends PureComponent {
         }
     }
     destroyMessage() {
-        const { isShow, message, type } = this.state
-        if (isShow && message && type) {
+        const { message} = this.state;
+        if (message) {
             this.timerId = setTimeout(() => {
-                console.log(this.state)
+                console.log(this.state);
                 this.setState({
-                    isShow: false,
                     message: null,
                     type: null,
                 })
@@ -130,12 +135,12 @@ class Message extends PureComponent {
         }
     }
     render() {
-        const { isShow, message, type } = this.state
-        const getMessageType = (currentType) => {
+        const { message, type } = this.state;
+        const getMessageStyle = (currentType) => {
             if (currentType) {
-                return TypeList[currentType]
+                return MessageStyles[currentType]
             }
-        }
+        };
         /**
          *  ...getMessageType(type)代替
          *  bgColor={getMessageType(type).bgColor}
@@ -146,8 +151,8 @@ class Message extends PureComponent {
         return (
             <div className="message-wrap">
                 <MessageBox>
-                    <MessageContent isShow={isShow}
-                        {...getMessageType(type)}>
+                    <MessageContent isHasMessage={message}
+                        {...getMessageStyle(type)}>
                         {message}
                         <CloseButton>×</CloseButton>
                     </MessageContent>
@@ -157,4 +162,4 @@ class Message extends PureComponent {
     }
 }
 
-export default Message;
+export default Alert;

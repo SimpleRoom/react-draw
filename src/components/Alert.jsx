@@ -98,6 +98,7 @@ class Alert extends PureComponent {
         this.state = {
             message: null,
             type: null,
+            hideTime:5000,
         }
         // type:success,warning,error...
         this.timerId = null
@@ -115,23 +116,19 @@ class Alert extends PureComponent {
     }
     // message存在才挂载
     componentDidMount() {
-        // this.destroyMessage()
+        this.destroyAlert()
     }
     componentWillUnmount() {
         if (this.timerId) {
             clearTimeout(this.timerId)
         }
     }
-    destroyMessage() {
-        const { message} = this.state;
+    destroyAlert() {
+        const { message, hideTime } = this.state;
         if (message) {
             this.timerId = setTimeout(() => {
-                console.log(this.state);
-                this.setState({
-                    message: null,
-                    type: null,
-                })
-            }, 3000)
+                this.props.hideAlert()
+            }, hideTime)
         }
     }
     render() {

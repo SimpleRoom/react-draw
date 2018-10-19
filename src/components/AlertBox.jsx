@@ -1,5 +1,5 @@
-import React, { PureComponent } from "react"
-import styled, { keyframes } from 'styled-components'
+import React, {PureComponent} from "react"
+import styled, {keyframes} from 'styled-components'
 // common
 const ClearFix = styled.div`
     &:before,&:after{
@@ -8,7 +8,7 @@ const ClearFix = styled.div`
         clear:both;
     }
 `;
-const maxZindex = 999;
+const maxZindex = 9999;
 const DefaultBg = "#d9edf7";
 const DefaultBorderColor = "#bce8f1";
 const DefaultFontColor = "#31708f";
@@ -69,7 +69,7 @@ const CloseButton = styled.button`
         opacity:.5;
     }
 `;
-
+//from messageType
 const MessageStyles = {
     default: {
         bgColor: "#d9edf7",
@@ -92,17 +92,19 @@ const MessageStyles = {
         fontColor: "#a94442",
     },
 }
-class Alert extends PureComponent {
+
+class AlertBox extends PureComponent {
     constructor(props) {
         super(props)
         this.state = {
             message: null,
             type: null,
-            hideTime:5000,
+            delayHideTime: 5000,
         }
         // type:success,warning,error...
         this.timerId = null
     }
+
     // 自动监听父组件传递的props自动更新当前状态，动画方便:ex <Transition>
     static getDerivedStateFromProps(nextProps, prevState) {
         // console.log(nextProps);
@@ -114,25 +116,35 @@ class Alert extends PureComponent {
         }
         return null;
     }
+
     // message存在才挂载
     componentDidMount() {
-        this.destroyAlert()
+        this.autoDestoryAlert()
     }
+
     componentWillUnmount() {
         if (this.timerId) {
             clearTimeout(this.timerId)
         }
     }
-    destroyAlert() {
-        const { message, hideTime } = this.state;
+
+    //自动消失
+    autoDestoryAlert() {
+        const {message, delayHideTime} = this.state;
         if (message) {
             this.timerId = setTimeout(() => {
                 this.props.hideAlert()
-            }, hideTime)
+            }, delayHideTime)
         }
     }
+
+    //手动消失
+    destroyAlert = () => {
+        this.props.hideAlert()
+    }
+
     render() {
-        const { message, type } = this.state;
+        const {message, type} = this.state;
         const getMessageStyle = (currentType) => {
             if (currentType) {
                 return MessageStyles[currentType]
@@ -148,10 +160,9 @@ class Alert extends PureComponent {
         return (
             <div className="message-wrap">
                 <MessageBox>
-                    <MessageContent isHasMessage={message}
-                        {...getMessageStyle(type)}>
+                    <MessageContent isHasMessage={message} {...getMessageStyle(type)}>
                         {message}
-                        <CloseButton>×</CloseButton>
+                        <CloseButton onClick={this.destroyAlert}>×</CloseButton>
                     </MessageContent>
                 </MessageBox>
             </div>
@@ -159,4 +170,4 @@ class Alert extends PureComponent {
     }
 }
 
-export default Alert;
+export default AlertBox;

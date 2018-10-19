@@ -1,6 +1,6 @@
 import React, {PureComponent} from "react"
 import styled, {keyframes} from 'styled-components'
-import Alert from "./Alert"
+import AlertBox from "./AlertBox"
 import {getGift} from './DrawData'
 
 // common
@@ -199,12 +199,12 @@ class Draw extends PureComponent {
         };
         // 开启转盘的定时器
         this.timer = null;
-        this.messageList = {
-            success: "恭喜您中奖了",
-            warning: "抱歉抽奖进行中，稍后再试",
-            error: "抽奖次数不足",
+        //alert message list
+        this.messageInfo = {
+            success: "恭喜您中奖了!",
+            warning: "抽奖进行中，请稍后再试!",
+            error: "抽奖次数不足,抓紧去完成任务获得抽奖资格吧~",
         }
-        console.log()
     }
 
     componentDidMount() {
@@ -215,11 +215,6 @@ class Draw extends PureComponent {
         if (this.timer) {
             clearTimeout(this.timer)
         }
-    }
-
-    alertMessage(messageType) {
-        let message = this.messageList[messageType];
-        this.setState({messageType, message});
     }
 
     startDraw = e => {
@@ -303,10 +298,17 @@ class Draw extends PureComponent {
             this.alertMessage("success")
         }
     }
+
+    alertMessage(messageType) {
+        let message = this.messageInfo[messageType];
+        this.setState({messageType, message});
+    }
+
     //移除alert的回调
     removeAlert = () => {
         this.setState({message: null, type: null})
     }
+
     hideGotDialog = () => {
         this.setState({showDialog: false})
     }
@@ -330,7 +332,8 @@ class Draw extends PureComponent {
             <div className="draw-box">
                 {/* tipsBox */}
                 {
-                    message ? <Alert message={message} type={messageType} hideAlert={this.removeAlert}></Alert> : null
+                    message ?
+                        <AlertBox message={message} type={messageType} hideAlert={this.removeAlert}></AlertBox> : null
                 }
 
                 {/* main */}

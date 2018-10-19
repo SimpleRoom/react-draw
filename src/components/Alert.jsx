@@ -104,7 +104,7 @@ class Alert extends PureComponent {
     }
     // 自动监听父组件传递的props自动更新当前状态，动画方便:ex <Transition>
     static getDerivedStateFromProps(nextProps, prevState) {
-        console.log(nextProps)
+        // console.log(nextProps);
         if (nextProps.message !== prevState.message) {
             return {
                 message: nextProps.message,
@@ -131,7 +131,7 @@ class Alert extends PureComponent {
                     message: null,
                     type: null,
                 })
-            }, 500)
+            }, 3000)
         }
     }
     render() {

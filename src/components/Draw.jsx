@@ -220,13 +220,13 @@ class Draw extends PureComponent {
             messageType,
             message,
         });
-        // 停留3秒自动清除
-        this.timer = setTimeout(() => {
-            this.setState({
-                messageType: null,
-                message: null,
-            });
-        }, 3000)
+        // 停留3秒自动清除-----能否把该控制移到子组件？？
+        // this.timer = setTimeout(() => {
+        //     this.setState({
+        //         messageType: null,
+        //         message: null,
+        //     });
+        // }, 3000)
     }
     startDraw = e => {
         // 抽奖进行中禁止点击，抽奖次数<=0禁止点击

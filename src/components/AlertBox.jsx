@@ -13,19 +13,109 @@ const DefaultBg = "#d9edf7";
 const DefaultBorderColor = "#bce8f1";
 const DefaultFontColor = "#31708f";
 
-//animation
-const zoomInDown = keyframes`
-    from {
-        opacity: 0;
-        transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
-        animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+/**
+ *  alert animation list
+ *  default shake
+ *
+ * */
+const shake = keyframes`
+    from, to {
+        transform: translate3d(0, 0, 0);
     }
-    60% {
-        opacity: 1;
-        transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
-        animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+    10%, 30%, 50%, 70%, 90% {
+        transform: translate3d(-10px, 0, 0);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translate3d(10px, 0, 0);
     }
 `;
+const animationList = {
+    zoomInDown: keyframes`
+        from {
+            opacity: 0;
+            transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
+            animation-timing-function: cubic-bezier(0.550, 0.055, 0.675, 0.190);
+        }
+        60% {
+            opacity: 1;
+            transform: scale3d(.475, .475, .475) translate3d(0, 60px, 0);
+            animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
+        }
+    `,
+    bounceIn: keyframes`
+        from, 20%, 40%, 60%, 80%, to {
+            animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+        }
+        0% {
+            opacity: 0;
+            transform: scale3d(.3, .3, .3);
+        }
+        20% {
+            transform: scale3d(1.1, 1.1, 1.1);
+        }
+        40% {
+            transform: scale3d(.9, .9, .9);
+        }
+        60% {
+            opacity: 1;
+            transform: scale3d(1.03, 1.03, 1.03);
+        }
+        80% {
+            transform: scale3d(.97, .97, .97);
+        }
+        to {
+            opacity: 1;
+            transform: scale3d(1, 1, 1);
+        }
+    `,
+    rubberBand: keyframes`
+        from {
+            transform: scale3d(1, 1, 1);
+        }
+        30% {
+            transform: scale3d(1.25, 0.75, 1);
+        }
+        40% {
+            transform: scale3d(0.75, 1.25, 1);
+        }
+        50% {
+            transform: scale3d(1.15, 0.85, 1);
+        }
+        65% {
+            transform: scale3d(.95, 1.05, 1);
+        }
+        75% {
+            transform: scale3d(1.05, .95, 1);
+        }
+        to {
+            transform: scale3d(1, 1, 1);
+        }
+    `,
+    wobble: keyframes`
+        from {
+            transform: none;
+        }
+        15% {
+            transform: translate3d(-25%, 0, 0) rotate3d(0, 0, 1, -5deg);
+        }
+        30% {
+            transform: translate3d(20%, 0, 0) rotate3d(0, 0, 1, 3deg);
+        }
+        45% {
+            transform: translate3d(-15%, 0, 0) rotate3d(0, 0, 1, -3deg);
+        }
+        60% {
+            transform: translate3d(10%, 0, 0) rotate3d(0, 0, 1, 2deg);
+        }
+        75% {
+            transform: translate3d(-5%, 0, 0) rotate3d(0, 0, 1, -1deg);
+        }
+        to {
+            transform: none;
+        }
+    `,
+}
+
 // MessageBox
 const MessageBox = styled(ClearFix)`
     text-align:center;
@@ -42,7 +132,7 @@ const MessageContent = styled.div`
     background-color:${props => props.bgColor ? props.bgColor : DefaultBg};
     border-color:${props => props.borderColor ? props.borderColor : DefaultBorderColor};
     display:${props => props.isHasMessage ? "block" : "none"};
-    animation: ${zoomInDown} 1.4s;
+    animation: ${props => props.animationType ? props.animationType : shake} 1.4s;
 
     display:inline-block;
 `;
@@ -69,7 +159,7 @@ const CloseButton = styled.button`
         opacity:.5;
     }
 `;
-//from messageType
+// message styles
 const MessageStyles = {
     default: {
         bgColor: "#d9edf7",
@@ -93,42 +183,50 @@ const MessageStyles = {
     },
 }
 
+
 class AlertBox extends PureComponent {
     constructor(props) {
         super(props)
+        /**
+         * @param{message}          String
+         * @param{type}             [String]: success,warning,error...
+         * @param{animationType}    [String]
+         *
+         **/
         this.state = {
             message: null,
             type: null,
+            animationType: null,
             delayHideTime: 5000,
         }
-        // type:success,warning,error...
         this.timerId = null
     }
 
-    // 自动监听父组件传递的props自动更新当前状态，动画方便:ex <Transition>
+    // listener props from Parent Component
     static getDerivedStateFromProps(nextProps, prevState) {
         // console.log(nextProps);
         if (nextProps.message !== prevState.message) {
             return {
                 message: nextProps.message,
                 type: nextProps.type,
+                animationType: nextProps.animationType,
             }
         }
         return null;
     }
 
-    // message存在才挂载
+    // call auto
     componentDidMount() {
         this.autoDestoryAlert()
     }
-
+    //
     componentWillUnmount() {
         if (this.timerId) {
             clearTimeout(this.timerId)
         }
     }
 
-    //自动消失
+    //auto remove Alert
     autoDestoryAlert() {
         const {message, delayHideTime} = this.state;
         if (message) {
@@ -138,29 +236,35 @@ class AlertBox extends PureComponent {
         }
     }
 
-    //手动消失
+    //remove by hand
     destroyAlert = () => {
         this.props.hideAlert()
     }
 
     render() {
-        const {message, type} = this.state;
+        const {message, type, animationType} = this.state;
+        // message style
         const getMessageStyle = (currentType) => {
             if (currentType) {
                 return MessageStyles[currentType]
             }
         };
+        // alert join animation
+        const getAnimation = (type) => {
+            return animationList[type]
+        }
         /**
          *  ...getMessageType(type)代替
          *  bgColor={getMessageType(type).bgColor}
          *  borderColor={getMessageType(type).borderColor}
          *  fontColor={getMessageType(type).fontColor}
+         *
          */
-
         return (
             <div className="message-wrap">
                 <MessageBox>
-                    <MessageContent isHasMessage={message} {...getMessageStyle(type)}>
+                    <MessageContent animationType={getAnimation(animationType)}
+                                    isHasMessage={message} {...getMessageStyle(type)}>
                         {message}
                         <CloseButton onClick={this.destroyAlert}>×</CloseButton>
                     </MessageContent>

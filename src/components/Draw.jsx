@@ -196,6 +196,7 @@ class Draw extends PureComponent {
             // 消息提示框
             message: null,
             messageType: null,
+            animationType: "rubberBand",
         };
         // 开启转盘的定时器
         this.timer = null;
@@ -323,7 +324,8 @@ class Draw extends PureComponent {
             gotGift,
             myCount,
             message,
-            messageType
+            messageType,
+            animationType,
         } = this.state;
         const getIsActive = (item) => (
             item.id === activeIndex ? 1 : 0
@@ -333,7 +335,10 @@ class Draw extends PureComponent {
                 {/* tipsBox */}
                 {
                     message ?
-                        <AlertBox message={message} type={messageType} hideAlert={this.removeAlert}></AlertBox> : null
+                        <AlertBox message={message}
+                                  type={messageType}
+                                  animationType={animationType}
+                                  hideAlert={this.removeAlert}></AlertBox> : null
                 }
 
                 {/* main */}

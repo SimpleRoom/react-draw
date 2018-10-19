@@ -1,5 +1,5 @@
-import React, {PureComponent} from "react"
-import styled, {keyframes} from 'styled-components'
+import React, { PureComponent } from "react"
+import styled, { keyframes } from 'styled-components'
 // common
 const ClearFix = styled.div`
     &:before,&:after{
@@ -37,7 +37,7 @@ const bounce = keyframes`
     }
 `;
 const animationList = {
-    shake:keyframes`
+    shake: keyframes`
         from, to {
             transform: translate3d(0, 0, 0);
         }
@@ -423,7 +423,7 @@ class AlertBox extends PureComponent {
 
     //auto remove Alert
     autoDestoryAlert() {
-        const {message, delayHideTime} = this.state;
+        const { message, delayHideTime } = this.state;
         if (message) {
             this.timerId = setTimeout(() => {
                 this.props.hideAlert()
@@ -437,7 +437,7 @@ class AlertBox extends PureComponent {
     }
 
     render() {
-        const {message, type, animation} = this.state;
+        const { message, type, animation } = this.state;
         // message style
         const getMessageStyle = (currentType) => {
             if (currentType) {
@@ -462,7 +462,7 @@ class AlertBox extends PureComponent {
             <div className="message-wrap">
                 <MessageBox>
                     <MessageContent animationName={getAnimation(animation)}
-                                    isHasMessage={message} {...getMessageStyle(type)}>
+                        isHasMessage={message} {...getMessageStyle(type)}>
                         {message}
                         <CloseButton onClick={this.destroyAlert}>×</CloseButton>
                     </MessageContent>

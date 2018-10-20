@@ -15,7 +15,7 @@ const DefaultFontColor = "#31708f";
 
 /**
  *  alert animation list
- *  default shake
+ *  default bounce
  *
  * */
 
@@ -380,7 +380,7 @@ class AlertBox extends PureComponent {
          * @param{message}          String
          * @param{type}             [String]: success,warning,error...
          * @param{animation}        [String]
-         * animation support list total(32): default=>bounce
+         * animation support list total(18): default=>bounce
          * shake ,rubberBand, wobble,
          * bounceIn, bounceInDown, bounceInLeft, bounceInRight, bounceInUp,
          * slideInUp, slideOutDown, slideInLeft, slideInRight,
@@ -414,7 +414,7 @@ class AlertBox extends PureComponent {
         this.autoDestoryAlert()
     }
 
-    //
+    // remove timer
     componentWillUnmount() {
         if (this.timerId) {
             clearTimeout(this.timerId)
@@ -446,13 +446,10 @@ class AlertBox extends PureComponent {
         };
         // alert join animation
         const getAnimation = (type) => {
-            console.log(animationList[type])
             return animationList[type]
         }
-        let tt = getAnimation(animation)
-        console.log(tt, animationList);
         /**
-         *  ...getMessageType(type)代替
+         *  ...getMessageType(type)对象的结构赋值
          *  bgColor={getMessageType(type).bgColor}
          *  borderColor={getMessageType(type).borderColor}
          *  fontColor={getMessageType(type).fontColor}

@@ -449,10 +449,10 @@ class AlertBox extends PureComponent {
             return animationList[type]
         }
         /**
-         *  ...getMessageType(type)对象的结构赋值
-         *  bgColor={getMessageType(type).bgColor}
-         *  borderColor={getMessageType(type).borderColor}
-         *  fontColor={getMessageType(type).fontColor}
+         *  ...getMessageStyle(type)对象的结构赋值
+         *  bgColor={getMessageStyle(type).bgColor}
+         *  borderColor={getMessageStyle(type).borderColor}
+         *  fontColor={getMessageStyle(type).fontColor}
          *
          */
         return (

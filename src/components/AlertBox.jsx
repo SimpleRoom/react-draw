@@ -411,7 +411,7 @@ class AlertBox extends PureComponent {
 
     // call auto
     componentDidMount() {
-        this.autoDestoryAlert()
+        this.autoDestroyAlert()
     }
 
     // remove timer
@@ -422,7 +422,7 @@ class AlertBox extends PureComponent {
     }
 
     //auto remove Alert
-    autoDestoryAlert() {
+    autoDestroyAlert() {
         const { message, delayHideTime } = this.state;
         if (message) {
             this.timerId = setTimeout(() => {

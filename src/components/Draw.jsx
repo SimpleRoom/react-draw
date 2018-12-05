@@ -1,7 +1,7 @@
-import React, {PureComponent} from "react"
-import styled, {keyframes} from 'styled-components'
+import React, { PureComponent } from "react"
+import styled, { keyframes } from 'styled-components'
 import AlertBox from "./AlertBox"
-import {getGift} from './DrawData'
+import { getGift } from './DrawData'
 
 // common
 const bgBorderColor = "#0066FF"
@@ -165,7 +165,7 @@ const CloseDialogBtn = styled.button`
     top:-60px;
 `;
 
-function GetDrawBtn({isClicking, onClick}) {
+function GetDrawBtn({ isClicking, onClick }) {
     return <DrawBtn isClicking={isClicking} onClick={onClick}>{isClicking ? "抽奖中..." : "开始"}</DrawBtn>
 }
 
@@ -230,7 +230,7 @@ class Draw extends PureComponent {
 
     startDraw = e => {
         // 抽奖进行中禁止点击，抽奖次数<=0禁止点击
-        let {isDrawing, myCount} = this.state;
+        let { isDrawing, myCount } = this.state;
         if (isDrawing) {
             this.alertMessage("warning");
         } else {
@@ -245,10 +245,10 @@ class Draw extends PureComponent {
                     }
                     // 是否正抽可能还需要接口来限制：如是否绑定手机号、、
                     if (result.ret_code === "0") {
-                        let {endStopIndex} = result;
+                        let { endStopIndex } = result;
                         let myCount = this.state.myCount - 1;
                         // 开启转盘,開啟限制再次點擊抽獎
-                        this.setState({isDrawing: true, endStopIndex, myCount}, this.startRun);
+                        this.setState({ isDrawing: true, endStopIndex, myCount }, this.startRun);
                         console.log(`最終要停在:${this.state.endStopIndex}`)
                     } else if (result.ret_code === "error") {
                     }
@@ -260,7 +260,7 @@ class Draw extends PureComponent {
     startRun() {
         // 总共需要转的圈数
         let leftRound = this.state.speed.length - 1;
-        this.addOneStep({isContinue: true, leftRound})
+        this.addOneStep({ isContinue: true, leftRound })
     }
 
     /*
@@ -274,8 +274,8 @@ class Draw extends PureComponent {
     * @leftRound        {Number}    剩余几圈  3代表一个无限大的值，因为还不知道结果
     */
     addOneStep = (params) => {
-        let {activeIndex, stepCount, speed} = this.state;
-        let {isContinue, leftRound} = params;
+        let { activeIndex, stepCount, speed } = this.state;
+        let { isContinue, leftRound } = params;
         activeIndex += 1;
         if (isContinue) {
             // 如果到超过奖品个数，重置为1
@@ -289,7 +289,7 @@ class Draw extends PureComponent {
                 console.log(`現在停在:${this.state.endStopIndex}`);
                 isContinue = false;
             }
-            this.setState({activeIndex});
+            this.setState({ activeIndex });
             const nextParams = {
                 isContinue,
                 leftRound,
@@ -311,17 +311,17 @@ class Draw extends PureComponent {
     }
 
     alertMessage(messageType) {
-        let {message, animationName} = this.messageInfo[messageType];
-        this.setState({messageType, message, animationName});
+        let { message, animationName } = this.messageInfo[messageType];
+        this.setState({ messageType, message, animationName });
     }
 
     //移除alert的回调
     removeAlert = () => {
-        this.setState({message: null, type: null})
+        this.setState({ message: null, messageType: null, animationName: null })
     }
 
     hideGotDialog = () => {
-        this.setState({showDialog: false})
+        this.setState({ showDialog: false })
     }
 
     render() {
@@ -346,9 +346,9 @@ class Draw extends PureComponent {
                 {
                     message ?
                         <AlertBox message={message}
-                                  type={messageType}
-                                  animation={animationName}
-                                  hideAlert={this.removeAlert}></AlertBox> : null
+                            type={messageType}
+                            animation={animationName}
+                            hideAlert={this.removeAlert}></AlertBox> : null
                 }
 
                 {/* main */}
@@ -371,16 +371,16 @@ class Draw extends PureComponent {
                             {
                                 giftList.map((gift, index) =>
                                     <GiftItem active={getIsActive(gift)}
-                                              iconSrc={gift.icon}
-                                              left={gift.left}
-                                              top={gift.top}
-                                              key={index}>
+                                        iconSrc={gift.icon}
+                                        left={gift.left}
+                                        top={gift.top}
+                                        key={index}>
                                         <GiftImg iconSrc={gift.icon}></GiftImg>
                                         <div className="gift-name">{gift.name}X{gift.count}</div>
                                     </GiftItem>
                                 )
                             }
-                            <GetDrawBtn isClicking={isDrawing} onClick={this.startDraw}/>
+                            <GetDrawBtn isClicking={isDrawing} onClick={this.startDraw} />
                         </GiftBox>
                     </DrawBg>
                 </DrawWrap>

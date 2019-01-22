@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react'
-import { createStore } from 'redux';
+// 手寫
+// import { createStore } from 'redux';
 import styled from 'styled-components'
 import { ClearFix } from '../components/commonStyle'
 
@@ -59,14 +60,45 @@ const couter = (state = 0, action) => {
   }
 }
 
+// import {createStore} from 'redux'
+const createStore = (reducer) => {
+  let state
+  let listeners = []
+
+  const getState = () => state
+
+  const dispatch = (action) => {
+    state = reducer(state, action)
+    listeners.forEach(listener => listener())
+  }
+
+  const subscribe = (listener) => {
+    listeners.push(listener)
+    return () => {
+      listeners = listeners.filter(item => item !== listener)
+    }
+  }
+
+  dispatch({})
+  return { getState, dispatch, subscribe }
+}
+
 const store = createStore(couter)
 
 const RenderCount = () => (
   <div className="count">{store.getState()}</div>
 )
 
-store.subscribe(RenderCount)
-store.dispatch({ type: 'INCREMENT' });
+const render = () => {
+  document.body.innerText = store.getState()
+}
+
+store.subscribe(render)
+document.addEventListener('click', () => {
+  store.dispatch({ type: 'INCREMENT' })
+})
+
+
 
 class Home extends PureComponent {
   constructor(props) {

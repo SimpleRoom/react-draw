@@ -41,7 +41,7 @@ const GrawTitle = styled.div`
 `;
 const DrawWrap = styled.div`
     width:640px;
-    padding-top:80px;
+    padding-top:30px;
     margin:0 auto;
 `;
 const DrawBg = styled(ClearFix)`
@@ -179,18 +179,12 @@ class Draw extends PureComponent {
         super(props)
         this.state = {
             giftList: getGift(),
-            // 一圈的总长度，礼物总数量
-            stepCount: getGift().length,
             // 剩余抽奖次数，接口返回
             myCount: 5,
             // 转动激活位置默认：1，动态，可设置(>=1&&<=stepCount)
             activeIndex: 1,
-            // 最终要停下的位置：接口返回(>=1&&<=stepCount)
-            endStopIndex: 14,
             // 抽奖是否正在进行中
             isDrawing: false,
-            // 转速   分别为最后0,1,2,3,4,5圈的转速
-            speed: [336, 168, 84, 42, 42, 42],
             // 抽獎結果的禮物名字
             showDialog: false,
             gotGift: null,
@@ -199,21 +193,27 @@ class Draw extends PureComponent {
             messageType: null,
             animationName: null,
         };
+        // 一圈的总长度，礼物总数量
+        this.stepCount = getGift().length
+        // 最终要停下的位置：接口返回(>=1&&<=stepCount)
+        this.endStopIndex = 14
+        // 转速   分别为最后0,1,2,3,4,5圈的转速
+        this.speed = [336, 168, 84, 42, 42, 42]
         // 开启转盘的定时器
-        this.timer = null;
+        this.timer = null
         //alert message list
         this.messageInfo = {
             success: {
-                message: "恭喜您中奖了!",
+                message: `恭喜您中奖了!`,
                 animationName: null
             },
             warning: {
-                message: "抽奖进行中，请稍后再试!",
-                animationName: "slideInLeft"
+                message: `抽奖进行中，请稍后再试!`,
+                animationName: `slideInLeft`
             },
             error: {
-                message: "抽奖次数不足,抓紧去完成任务获得抽奖资格吧~",
-                animationName: "shake",
+                message: `抽奖次数不足,抓紧去完成任务获得抽奖资格吧~`,
+                animationName: `shake`,
             },
         }
     }
@@ -225,41 +225,42 @@ class Draw extends PureComponent {
     componentWillUnmount() {
         if (this.timer) {
             clearTimeout(this.timer)
+            this.timer = null
         }
     }
 
-    startDraw = e => {
+    startDraw = () => {
         // 抽奖进行中禁止点击，抽奖次数<=0禁止点击
         let { isDrawing, myCount } = this.state;
-        if (isDrawing) {
-            this.alertMessage("warning");
-        } else {
-            if (myCount <= 0) {
-                this.alertMessage("error");
-            } else {
-                // 假装发了一个ajax请求：sucsess,catch,error
-                setTimeout(() => {
-                    let result = {
-                        ret_code: "0", //success
-                        endStopIndex: getRandomNum(1, 18),
-                    }
-                    // 是否正抽可能还需要接口来限制：如是否绑定手机号、、
-                    if (result.ret_code === "0") {
-                        let { endStopIndex } = result;
-                        let myCount = this.state.myCount - 1;
-                        // 开启转盘,開啟限制再次點擊抽獎
-                        this.setState({ isDrawing: true, endStopIndex, myCount }, this.startRun);
-                        console.log(`最終要停在:${this.state.endStopIndex}`)
-                    } else if (result.ret_code === "error") {
-                    }
-                }, 300)
+        if (isDrawing) return this.alertMessage('warning')
+        if (myCount <= 0) return this.alertMessage('error')
+        // api
+        this.mockApi()
+    }
+
+    mockApi = () => {
+        // 假装发了一个ajax请求：sucsess,catch,error
+        setTimeout(() => {
+            let result = {
+                ret_code: '0', //success
+                endStopIndex: getRandomNum(1, 18),
             }
-        }
+            // 是否正抽可能还需要接口来限制：如是否绑定手机号、、
+            if (result.ret_code === '0') {
+                let myCount = this.state.myCount - 1;
+                this.endStopIndex = result.endStopIndex
+                // 开启转盘,開啟限制再次點擊抽獎
+                this.setState({ isDrawing: true, myCount }, this.startRun);
+                console.log(`最終要停在:${this.endStopIndex}`)
+            } else if (result.ret_code === "error") {
+                this.setState({ messageType: 'error', message: '当前服务器错误，稍后再试！', animationName: 'shake' })
+            }
+        }, 300)
     }
 
     startRun() {
         // 总共需要转的圈数
-        let leftRound = this.state.speed.length - 1;
+        let leftRound = this.speed.length - 1
         this.addOneStep({ isContinue: true, leftRound })
     }
 
@@ -274,19 +275,19 @@ class Draw extends PureComponent {
     * @leftRound        {Number}    剩余几圈  3代表一个无限大的值，因为还不知道结果
     */
     addOneStep = (params) => {
-        let { activeIndex, stepCount, speed } = this.state;
-        let { isContinue, leftRound } = params;
+        let { activeIndex } = this.state;
+        let { isContinue, leftRound } = params
         activeIndex += 1;
         if (isContinue) {
             // 如果到超过奖品个数，重置为1
-            if (activeIndex > stepCount) {
+            if (activeIndex > this.stepCount) {
                 console.log(`转了${leftRound}圈`);
                 leftRound -= 1;
                 activeIndex = 1;
             }
             // 如果已经到最后一圈了  且  已经到了指定要中奖的位置了  就不需要继续了
-            if (leftRound === 0 && activeIndex === this.state.endStopIndex) {
-                console.log(`現在停在:${this.state.endStopIndex}`);
+            if (leftRound === 0 && activeIndex === this.endStopIndex) {
+                console.log(`現在停在:${this.endStopIndex}`);
                 isContinue = false;
             }
             this.setState({ activeIndex });
@@ -296,23 +297,23 @@ class Draw extends PureComponent {
             };
             this.timer = setTimeout(() => {
                 this.addOneStep(nextParams)
-            }, speed[leftRound]);
+            }, this.speed[leftRound]);
         } else {
             clearTimeout(this.timer);
             this.timer = null;
-            let gotGift = this.state.giftList[this.state.endStopIndex - 1];
+            let gotGift = this.state.giftList[this.endStopIndex - 1];
             this.setState({
                 isDrawing: false,
-                gotGift,
                 showDialog: true,
+                gotGift,
             });
-            this.alertMessage("success")
+            this.alertMessage('success')
         }
     }
 
     alertMessage(messageType) {
-        let { message, animationName } = this.messageInfo[messageType];
-        this.setState({ messageType, message, animationName });
+        let { message, animationName } = this.messageInfo[messageType]
+        this.setState({ messageType, message, animationName })
     }
 
     //移除alert的回调

@@ -1,11 +1,11 @@
 import React, { PureComponent } from 'react'
+import Draw from '../components/Draw'
 // 手寫
-// import { createStore } from 'redux';
 import styled from 'styled-components'
 import { ClearFix } from '../components/commonStyle'
 
 const Main = styled.div`
-  width:680px;
+  width:660px;
   margin:0 auto;
 `;
 const Container = styled.div`
@@ -15,6 +15,7 @@ const Container = styled.div`
 const TabBox = styled.div`
   position:relative;
   text-align:center;
+  padding:20px 0;
 `;
 const NavButton = styled.button`
   display:inline-block;
@@ -41,64 +42,13 @@ const SectionTwo = styled(ClearFix)`
 const navList = [
   {
     id: 1,
-    name: 'AAA'
+    name: 'Draw'
   },
   {
     id: 2,
-    name: 'BBB'
+    name: 'Todo'
   }
 ]
-
-const couter = (state = 0, action) => {
-  switch (action.type) {
-    case 'INCREMENT':
-      return state + 1
-    case "DECREMENT":
-      return state - 1
-    default:
-      return state
-  }
-}
-
-// import {createStore} from 'redux'
-const createStore = (reducer) => {
-  let state
-  let listeners = []
-
-  const getState = () => state
-
-  const dispatch = (action) => {
-    state = reducer(state, action)
-    listeners.forEach(listener => listener())
-  }
-
-  const subscribe = (listener) => {
-    listeners.push(listener)
-    return () => {
-      listeners = listeners.filter(item => item !== listener)
-    }
-  }
-
-  dispatch({})
-  return { getState, dispatch, subscribe }
-}
-
-const store = createStore(couter)
-
-const RenderCount = () => (
-  <div className="count">{store.getState()}</div>
-)
-
-const render = () => {
-  document.body.innerText = store.getState()
-}
-
-store.subscribe(render)
-document.addEventListener('click', () => {
-  store.dispatch({ type: 'INCREMENT' })
-})
-
-
 
 class Home extends PureComponent {
   constructor(props) {
@@ -106,7 +56,6 @@ class Home extends PureComponent {
     this.state = {
       activeIndex: 1,
       navList: navList,
-      count: store.getState(),
     }
   }
 
@@ -121,21 +70,10 @@ class Home extends PureComponent {
     if (index !== activeIndex) {
       this.setState({ activeIndex: index })
     }
-    console.log(store)
-  }
-
-  incrementCount = () => {
-    store.dispatch({ type: 'INCREMENT' })
-    console.log(store, `INCREMENT`)
-  }
-
-  decrementCount = () => {
-    store.dispatch({ type: 'DECREMENT' })
-    console.log(store, `DECREMENT`)
   }
 
   render() {
-    const { navList, activeIndex, count } = this.state
+    const { navList, activeIndex } = this.state
     const getActive = (current) => {
       return current.id === activeIndex ? true : false
     }
@@ -148,13 +86,10 @@ class Home extends PureComponent {
         </TabBox>
         <Container>
           <SectionOne showIndex={activeIndex}>
-            <p>{count}</p>
-            <RenderCount />
-            <button onClick={this.incrementCount}>+</button>
-            <button onClick={this.decrementCount}>-</button>
+            <Draw />
           </SectionOne>
           <SectionTwo showIndex={activeIndex}>
-            bbb
+            <p>AAAA</p>
           </SectionTwo>
         </Container>
       </Main>

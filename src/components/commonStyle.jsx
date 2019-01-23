@@ -8,5 +8,6 @@ const ClearFix = styled.div`
     }
 `;
 const levelZindex = 10
+const maxZindex = 9999;
 
-export { ClearFix, levelZindex }
+export { ClearFix, levelZindex, maxZindex }

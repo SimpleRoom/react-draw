@@ -1,24 +1,16 @@
 import React, { PureComponent } from "react"
 import styled, { keyframes } from 'styled-components'
+import { ClearFix, maxZindex } from '../components/commonStyle'
 // common
-const ClearFix = styled.div`
-    &:before,&:after{
-        display:table;
-        content:'';
-        clear:both;
-    }
-`;
-const maxZindex = 9999;
 const DefaultBg = "#d9edf7";
 const DefaultBorderColor = "#bce8f1";
 const DefaultFontColor = "#31708f";
 
-/**
+/*
  *  alert animation list
  *  default bounce
  *
- * */
-
+ */
 const bounce = keyframes`
     from, 20%, 53%, 80%, to {
         animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);

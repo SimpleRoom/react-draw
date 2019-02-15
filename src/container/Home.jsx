@@ -1,5 +1,12 @@
 import React, { PureComponent } from 'react'
 import Draw from '../components/Draw'
+// form
+import SignIn from './form/Array'
+import Username from './form/AsyncValidation'
+import Basic from './form/Basic'
+import FieldLevelValidation from './form/CombinedValidations'
+import SignUp from './form/CustomInputs'
+
 // 手寫
 import styled from 'styled-components'
 import { ClearFix } from '../components/commonStyle'
@@ -38,6 +45,10 @@ const SectionOne = styled(ClearFix)`
 const SectionTwo = styled(ClearFix)`
   display:${props => props.showIndex === 2 ? 'block' : 'none'};
 `;
+
+const SectionForm = styled(ClearFix)`
+  display:${props => props.showIndex === 3 ? 'block' : 'none'};
+`;
 // nav
 const navList = [
   {
@@ -47,6 +58,10 @@ const navList = [
   {
     id: 2,
     name: 'Todo'
+  },
+  {
+    id: 3,
+    name: 'Form'
   }
 ]
 
@@ -54,7 +69,7 @@ class Home extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      activeIndex: 1,
+      activeIndex: 3,
       navList: navList,
     }
   }
@@ -91,7 +106,20 @@ class Home extends PureComponent {
           <SectionTwo showIndex={activeIndex}>
             <p>AAAA</p>
           </SectionTwo>
+
+          <SectionForm showIndex={activeIndex}>
+            <SignIn />
+            <hr/>
+            <Username />
+            <hr/>
+            <Basic />
+            <hr/>
+            <FieldLevelValidation />
+            <hr/>
+            <SignUp />
+          </SectionForm>
         </Container>
+        <br/><br/><br/><br/><br/>
       </Main>
     )
   }

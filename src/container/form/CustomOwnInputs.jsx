@@ -1,10 +1,20 @@
 import './formik-demo.css';
 import React from 'react';
-import { withFormik } from 'formik';
+import { Field, ErrorMessage, withFormik } from 'formik';
 import * as Yup from 'yup';
 import classnames from 'classnames';
 // Helper for the demo
-import {  DisplayFormikState } from './DisplayFormikState';
+import { DisplayFormikState } from './DisplayFormikState';
+
+const Fieldset = ({ name, label, ...rest }) => (
+  <React.Fragment>
+    <div>
+      <label htmlFor={name}>{label}</label>
+      <Field id={name} name={name} {...rest} />
+      <ErrorMessage name={name} />
+    </div>
+  </React.Fragment>
+);
 
 const formikEnhancer = withFormik({
   validationSchema: Yup.object().shape({
@@ -23,6 +33,7 @@ const formikEnhancer = withFormik({
     ...user,
   }),
   handleSubmit: (payload, { setSubmitting }) => {
+    console.log(payload)
     alert(payload.email);
     setSubmitting(false);
   },
@@ -109,6 +120,25 @@ const MyForm = props => {
         onChange={handleChange}
         onBlur={handleBlur}
       />
+      <div className="list">
+        {
+          values.list.length ? values.list.map(item =>
+            <p key={item.id}>{item.name}</p>
+          ) : null
+        }
+      </div>
+      <div className="select">
+        <Fieldset
+          name="grade"
+          label="grade"
+          component="select"
+        >
+          <option value="">Select a Color</option>
+          <option value="red">Red</option>
+          <option value="green">Green</option>
+          <option value="blue">Blue</option>
+        </Fieldset>
+      </div>
       <button
         type="button"
         className="outline"
@@ -127,12 +157,31 @@ const MyForm = props => {
 
 const MyEnhancedForm = formikEnhancer(MyForm);
 
+const List = [
+  {
+    id: 1,
+    name: 'aaa',
+  },
+  {
+    id: 2,
+    name: 'bbb',
+  }
+]
+class CustomOwnInputs extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      list: List,
+    }
+  }
+  render() {
+    const { list } = this.state
+    return (
+      <div className="custom-own-inputs">
+        <MyEnhancedForm user={{ email: '', firstName: '', lastName: '', list: list }} />
+      </div>
+    )
+  }
+}
 
-
-const CustomOwnInputs = () => (
-  <div className="custom-own-inputs">
-    <MyEnhancedForm user={{ email: '', firstName: '', lastName: '' }} />
-  </div>
-);
-
-export default  CustomOwnInputs
+export default CustomOwnInputs

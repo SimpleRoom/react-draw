@@ -3,7 +3,7 @@ import { Formik, Field, Form } from 'formik';
 
 const Basic = () => (
   <div>
-    <h1>Sign Up</h1>
+    <h1>Basic</h1>
     <Formik
       initialValues={{
         firstName: '',

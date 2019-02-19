@@ -6,6 +6,8 @@ import Username from './form/AsyncValidation'
 import Basic from './form/Basic'
 import FieldLevelValidation from './form/CombinedValidations'
 import SignUp from './form/CustomInputs'
+// 
+import CustomOwnInputs from './form/CustomOwnInputs'
 
 // 手寫
 import styled from 'styled-components'
@@ -117,6 +119,8 @@ class Home extends PureComponent {
             <FieldLevelValidation />
             <hr/>
             <SignUp />
+            <hr/>
+            <CustomOwnInputs />
           </SectionForm>
         </Container>
         <br/><br/><br/><br/><br/>

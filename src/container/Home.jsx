@@ -5,7 +5,7 @@ import SignIn from './form/Array'
 import Username from './form/AsyncValidation'
 import Basic from './form/Basic'
 import FieldLevelValidation from './form/CombinedValidations'
-import SignUp from './form/CustomInputs'
+import CustomiInput from './form/CustomInputs'
 // 
 import CustomOwnInputs from './form/CustomOwnInputs'
 
@@ -118,7 +118,7 @@ class Home extends PureComponent {
             <hr/>
             <FieldLevelValidation />
             <hr/>
-            <SignUp />
+            <CustomiInput />
             <hr/>
             <CustomOwnInputs />
           </SectionForm>

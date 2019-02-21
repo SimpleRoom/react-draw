@@ -14,83 +14,122 @@ const Fieldset = ({ name, label, ...rest }) => (
   </React.Fragment>
 );
 
-const SignUp = () => {
-  const params = {
-    email: '',
-    color: '',
-    animal: '',
-    website: '',
+
+class CustomiInput extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      config: {
+        userName: '',
+        userAge: '',
+        email: '',
+        color: '',
+        website: '',
+      }
+    }
+  }
+  onSubmit = (values, formActions) => {
+    setTimeout(() => {
+      console.log(this, formActions, `提交了`)
+      alert(JSON.stringify(values, null, 2));
+    }, 500);
   }
 
-  return (
-    <div>
-      <h1>Sign Up 自定义输入</h1>
-      <Formik
-        initialValues={params}
-        validationSchema={Yup.object().shape({
-          email: Yup.string()
-            .email('Invalid email address')
-            .required('Required'),
-          color: Yup.string().required('Required'),
-          website: Yup.string()
-            .url('Invalid URL')
-            .required('Required'),
-          animal: Yup.string().required('Required'),
-        })}
-        onSubmit={values => {
-          setTimeout(() => {
-            console.log(this)
-            alert(JSON.stringify(values, null, 2));
-          }, 500);
-        }}
-        render={({ isSubmitting, handleReset }) => (
-          <Form>
-            <Fieldset
-              name="email"
-              type="email"
-              label="Email"
-              placeholder="jane@acme.com"
-            />
-            <Fieldset
-              name="color"
-              label="Favorite Color"
-              component="select"
-            >
-              <option value="">Select a Color</option>
-              <option value="red">Red</option>
-              <option value="green">Green</option>
-              <option value="blue">Blue</option>
-            </Fieldset>
+  onInputChnage = (e) => {
+    const targetInput = e.target
+    const targetName = targetInput.getAttribute('name')
+    const targetValue = targetInput.value
+    this.onResetConfig(targetName, targetValue)
+    console.log(targetName, targetValue, `當前輸入`)
+  }
 
-            <Fieldset
-              name="website"
-              type="url"
-              label="Website"
-              placeholder="https://example.com"
-            />
+  onResetConfig = (name, value) => {
+    let { config } = this.state
+    config[name] = value
+    this.setState({ config })
+  }
 
-            <Fieldset name="animal" component="select" label="Favorite Animal">
-              <option value="">Select an animal</option>
-              <option value="tiger">Tiger</option>
-              <option value="bear">Bear</option>
-              <option value="shark">Shark</option>
-            </Fieldset>
+  render() {
+    const { config } = this.state
+    return (
+      <div>
+        <h1>Sign Up 自定义输入</h1>
+        <Formik
+          initialValues={config}
+          validationSchema={Yup.object().shape({
+            userName: Yup.string()
+              .min(2, '名字至少2個字')
+              .max(4,'名字最多4個字'),
+            userAge: Yup.number()
+            .max(100, '最大年齡只能是100')
+            .min(1, '最小只能是1'),
+            email: Yup.string()
+              .email('Invalid email address')
+              .required('Required'),
+            color: Yup.string().required('Required'),
+            website: Yup.string()
+              .url('Invalid URL')
+              .required('Required'),
+          })}
+          onSubmit={this.onSubmit}
+          render={({ isSubmitting, handleReset }) => (
+            <Form>
+              <Fieldset
+                name="userName"
+                type="text"
+                label="userName"
+                placeholder="你的名字"
+                maxLength="4"
+                onChange={this.onInputChnage}
+              />
+              <Fieldset
+                name="userAge"
+                type="number"
+                label="userAge"
+                placeholder="你的年齡"
+                maxLength="3"
+                onChange={this.onInputChnage}
+              />
+              <Fieldset
+                name="email"
+                type="email"
+                label="Email"
+                placeholder="jane@acme.com"
+                onChange={this.onInputChnage}
+              />
+              <Fieldset
+                name="color"
+                label="Favorite Color"
+                component="select"
+              >
+                <option value="">Select a Color</option>
+                <option value="red">Red</option>
+                <option value="green">Green</option>
+                <option value="blue">Blue</option>
+              </Fieldset>
 
-            <button
-              type="reset"
-              className="secondary"
-              disabled={isSubmitting}
-              onClick={handleReset}
-            >
-              Reset
-          </button>
+              <Fieldset
+                name="website"
+                type="url"
+                label="Website"
+                placeholder="https://example.com"
+              />
 
-            <button type="submit">Submit</button>
-          </Form>
-        )}
-      />
-    </div>
-  )
+              <button
+                type="reset"
+                className="secondary"
+                disabled={isSubmitting}
+                onClick={handleReset}
+              >
+                Reset
+            </button>
+              <button type="submit">Submit</button>
+            </Form>
+          )}
+        />
+      </div>
+    )
+  }
 }
 
-export default SignUp;
+export default CustomiInput

@@ -24,6 +24,12 @@ const formikEnhancer = withFormik({
     lastName: Yup.string()
       .min(2, "C'mon, your name is longer than that")
       .required('Last name is required.'),
+    age: Yup.number()
+    .required('不能為空~')
+    .max(3, '限3位數')
+    .moreThan(0, '最小為1~')
+    .lessThan(101, '不能超過100~')
+    .positive('必須是大於1的'),
     email: Yup.string()
       .email('Invalid email address')
       .required('Email is required!'),
@@ -88,6 +94,7 @@ const MyForm = props => {
     handleReset,
     isSubmitting,
   } = props;
+  console.log(isSubmitting)
   return (
     <form onSubmit={handleSubmit}>
       <TextInput
@@ -107,6 +114,17 @@ const MyForm = props => {
         placeholder="Doe"
         error={touched.lastName && errors.lastName}
         value={values.lastName}
+        onChange={handleChange}
+        onBlur={handleBlur}
+      />
+      <TextInput
+        id="age"
+        type="number"
+        maxLength="3"
+        label="age"
+        placeholder="15"
+        error={touched.age && errors.age}
+        value={values.age}
         onChange={handleChange}
         onBlur={handleBlur}
       />
@@ -178,7 +196,7 @@ class CustomOwnInputs extends React.Component {
     const { list } = this.state
     return (
       <div className="custom-own-inputs">
-        <MyEnhancedForm user={{ email: '', firstName: '', lastName: '', list: list }} />
+        <MyEnhancedForm user={{ email: '', firstName: '', lastName: '', age: '', list: list }} />
       </div>
     )
   }

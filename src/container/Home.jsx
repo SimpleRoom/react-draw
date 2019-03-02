@@ -1,14 +1,5 @@
 import React, { PureComponent } from 'react'
 import Draw from '../components/Draw'
-// form
-import SignIn from './form/Array'
-import Username from './form/AsyncValidation'
-import Basic from './form/Basic'
-import FieldLevelValidation from './form/CombinedValidations'
-import CustomiInput from './form/CustomInputs'
-// 
-import CustomOwnInputs from './form/CustomOwnInputs'
-
 // 手寫
 import styled from 'styled-components'
 import { ClearFix } from '../components/commonStyle'
@@ -48,22 +39,18 @@ const SectionTwo = styled(ClearFix)`
   display:${props => props.showIndex === 2 ? 'block' : 'none'};
 `;
 
-const SectionForm = styled(ClearFix)`
-  display:${props => props.showIndex === 3 ? 'block' : 'none'};
-`;
+// const SectionForm = styled(ClearFix)`
+//   display:${props => props.showIndex === 3 ? 'block' : 'none'};
+// `;
 // nav
 const navList = [
   {
     id: 1,
-    name: 'Draw'
-  },
-  {
-    id: 2,
     name: 'Todo'
   },
   {
-    id: 3,
-    name: 'Form'
+    id: 2,
+    name: 'Draw'
   }
 ]
 
@@ -71,7 +58,7 @@ class Home extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      activeIndex: 3,
+      activeIndex: 2,
       navList: navList,
     }
   }
@@ -103,27 +90,12 @@ class Home extends PureComponent {
         </TabBox>
         <Container>
           <SectionOne showIndex={activeIndex}>
-            <Draw />
+            <p>todo list</p>
           </SectionOne>
           <SectionTwo showIndex={activeIndex}>
-            <p>AAAA</p>
+            <Draw />
           </SectionTwo>
-
-          <SectionForm showIndex={activeIndex}>
-            <SignIn />
-            <hr/>
-            <Username />
-            <hr/>
-            <Basic />
-            <hr/>
-            <FieldLevelValidation />
-            <hr/>
-            <CustomiInput />
-            <hr/>
-            <CustomOwnInputs />
-          </SectionForm>
         </Container>
-        <br/><br/><br/><br/><br/>
       </Main>
     )
   }

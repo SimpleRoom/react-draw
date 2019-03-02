@@ -223,15 +223,12 @@ class Draw extends PureComponent {
     }
 
     componentWillUnmount() {
-        if (this.timer) {
-            clearTimeout(this.timer)
-            this.timer = null
-        }
+        this.timer && clearTimeout(this.timer)
     }
 
     startDraw = () => {
         // 抽奖进行中禁止点击，抽奖次数<=0禁止点击
-        let { isDrawing, myCount } = this.state;
+        let { isDrawing, myCount } = this.state
         if (isDrawing) return this.alertMessage('warning')
         if (myCount <= 0) return this.alertMessage('error')
         // api
@@ -250,10 +247,14 @@ class Draw extends PureComponent {
                 let myCount = this.state.myCount - 1;
                 this.endStopIndex = result.endStopIndex
                 // 开启转盘,開啟限制再次點擊抽獎
-                this.setState({ isDrawing: true, myCount }, this.startRun);
+                this.setState({ isDrawing: true, myCount }, this.startRun)
                 console.log(`最終要停在:${this.endStopIndex}`)
             } else if (result.ret_code === "error") {
-                this.setState({ messageType: 'error', message: '当前服务器错误，稍后再试！', animationName: 'shake' })
+                this.setState({
+                    messageType: 'error',
+                    message: '当前服务器错误，稍后再试！',
+                    animationName: 'shake'
+                })
             }
         }, 300)
     }
@@ -281,13 +282,13 @@ class Draw extends PureComponent {
         if (isContinue) {
             // 如果到超过奖品个数，重置为1
             if (activeIndex > this.stepCount) {
-                console.log(`转了${leftRound}圈`);
+                console.log(`转了${leftRound}圈`)
                 leftRound -= 1;
                 activeIndex = 1;
             }
             // 如果已经到最后一圈了  且  已经到了指定要中奖的位置了  就不需要继续了
             if (leftRound === 0 && activeIndex === this.endStopIndex) {
-                console.log(`現在停在:${this.endStopIndex}`);
+                console.log(`現在停在:${this.endStopIndex}`)
                 isContinue = false;
             }
             this.setState({ activeIndex });
@@ -346,10 +347,11 @@ class Draw extends PureComponent {
                 {/* tipsBox */}
                 {
                     message ?
-                        <AlertBox message={message}
+                        <AlertBox
+                            message={message}
                             type={messageType}
                             animation={animationName}
-                            hideAlert={this.removeAlert}></AlertBox> : null
+                            hideAlert={this.removeAlert} /> : null
                 }
 
                 {/* main */}
@@ -359,7 +361,7 @@ class Draw extends PureComponent {
                         <DrawGiftDialog show={showDialog}>
                             {
                                 showDialog ? <GotGift giftSrc={gotGift.icon}>
-                                    <CloseDialogBtn onClick={this.hideGotDialog}></CloseDialogBtn>
+                                    <CloseDialogBtn onClick={this.hideGotDialog} />
                                     <div className="got-img"></div>
                                     <p className="got-name">{gotGift.name}</p>
                                     {
@@ -371,7 +373,8 @@ class Draw extends PureComponent {
                         <GiftBox>
                             {
                                 giftList.map((gift, index) =>
-                                    <GiftItem active={getIsActive(gift)}
+                                    <GiftItem
+                                        active={getIsActive(gift)}
                                         iconSrc={gift.icon}
                                         left={gift.left}
                                         top={gift.top}

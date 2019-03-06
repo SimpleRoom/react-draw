@@ -4,6 +4,8 @@ import Draw from '../components/Draw'
 import styled from 'styled-components'
 import { ClearFix } from '../components/commonStyle'
 
+import Bars from '../components/Bars'
+
 const Main = styled.div`
   width:660px;
   margin:0 auto;
@@ -58,7 +60,7 @@ class Home extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
-      activeIndex: 2,
+      activeIndex: 1,
       navList: navList,
     }
   }
@@ -90,7 +92,7 @@ class Home extends PureComponent {
         </TabBox>
         <Container>
           <SectionOne showIndex={activeIndex}>
-            <p>todo list</p>
+            <Bars />
           </SectionOne>
           <SectionTwo showIndex={activeIndex}>
             <Draw />

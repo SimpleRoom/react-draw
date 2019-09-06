@@ -1,10 +1,10 @@
-import React, { PureComponent } from "react"
+import React, { PureComponent } from 'react'
 import styled, { keyframes } from 'styled-components'
 import { ClearFix, maxZindex } from '../components/commonStyle'
 // common
-const DefaultBg = "#d9edf7";
-const DefaultBorderColor = "#bce8f1";
-const DefaultFontColor = "#31708f";
+const DefaultBg = '#d9edf7'
+const DefaultBorderColor = '#bce8f1'
+const DefaultFontColor = '#31708f'
 
 /*
  *  alert animation list
@@ -27,9 +27,9 @@ const bounce = keyframes`
 	90% {
 		transform: translate3d(0,-4px,0);
 	}
-`;
+`
 const animationList = {
-	shake: keyframes`
+  shake: keyframes`
 		from, to {
 			transform: translate3d(0, 0, 0);
 		}
@@ -40,7 +40,7 @@ const animationList = {
 			transform: translate3d(10px, 0, 0);
 		}
 	`,
-	rubberBand: keyframes`
+  rubberBand: keyframes`
 		from {
 			transform: scale3d(1, 1, 1);
 		}
@@ -63,7 +63,7 @@ const animationList = {
 			transform: scale3d(1, 1, 1);
 		}
 	`,
-	wobble: keyframes`
+  wobble: keyframes`
 		from {
 			transform: none;
 		}
@@ -86,7 +86,7 @@ const animationList = {
 			transform: none;
 		}
 	`,
-	bounceIn: keyframes`
+  bounceIn: keyframes`
 		from, 20%, 40%, 60%, 80%, to {
 			animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
 		}
@@ -112,7 +112,7 @@ const animationList = {
 			transform: scale3d(1, 1, 1);
 		}
 	`,
-	bounceInDown: keyframes`
+  bounceInDown: keyframes`
 			from, 60%, 75%, 90%, to {
 				animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
 			}
@@ -134,7 +134,7 @@ const animationList = {
 				transform: none;
 			}
 	`,
-	bounceInLeft: keyframes`
+  bounceInLeft: keyframes`
 		from, 60%, 75%, 90%, to {
 			animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
 		}
@@ -156,7 +156,7 @@ const animationList = {
 			transform: none;
 		}
 	`,
-	bounceInRight: keyframes`
+  bounceInRight: keyframes`
 		from, 60%, 75%, 90%, to {
 			animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
 		}
@@ -178,7 +178,7 @@ const animationList = {
 			transform: none;
 		}
 	`,
-	bounceInUp: keyframes`
+  bounceInUp: keyframes`
 		from, 60%, 75%, 90%, to {
 			animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
 		}
@@ -200,7 +200,7 @@ const animationList = {
 			transform: translate3d(0, 0, 0);
 		}
 	`,
-	slideInUp: keyframes`
+  slideInUp: keyframes`
 		from {
 			transform: translate3d(0, 100%, 0);
 			visibility: visible;
@@ -209,7 +209,7 @@ const animationList = {
 			transform: translate3d(0, 0, 0);
 		}
 	`,
-	slideOutDown: keyframes`
+  slideOutDown: keyframes`
 		from {
 			transform: translate3d(0, 0, 0);
 		}
@@ -218,7 +218,7 @@ const animationList = {
 			transform: translate3d(0, 100%, 0);
 		}
 	`,
-	slideInLeft: keyframes`
+  slideInLeft: keyframes`
 		from {
 			transform: translate3d(-100%, 0, 0);
 			visibility: visible;
@@ -227,7 +227,7 @@ const animationList = {
 			transform: translate3d(0, 0, 0);
 		}
 	`,
-	slideInRight: keyframes`
+  slideInRight: keyframes`
 		from {
 			transform: translate3d(100%, 0, 0);
 			visibility: visible;
@@ -236,7 +236,7 @@ const animationList = {
 			transform: translate3d(0, 0, 0);
 		}
 	`,
-	zoomIn: keyframes`
+  zoomIn: keyframes`
 		from {
 			opacity: 0;
 			transform: scale3d(.3, .3, .3);
@@ -245,7 +245,7 @@ const animationList = {
 			opacity: 1;
 		}
 	`,
-	zoomInDown: keyframes`
+  zoomInDown: keyframes`
 		from {
 			opacity: 0;
 			transform: scale3d(.1, .1, .1) translate3d(0, -1000px, 0);
@@ -257,7 +257,7 @@ const animationList = {
 			animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
 		}
 	`,
-	zoomInLeft: keyframes`
+  zoomInLeft: keyframes`
 		from {
 			opacity: 0;
 			transform: scale3d(.1, .1, .1) translate3d(-1000px, 0, 0);
@@ -269,7 +269,7 @@ const animationList = {
 			animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
 		}
 	`,
-	zoomInRight: keyframes`
+  zoomInRight: keyframes`
 		from {
 			opacity: 0;
 			transform: scale3d(.1, .1, .1) translate3d(1000px, 0, 0);
@@ -281,7 +281,7 @@ const animationList = {
 			animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
 		}
 	`,
-	zoomInUp: keyframes`
+  zoomInUp: keyframes`
 		from {
 			opacity: 0;
 			transform: scale3d(.1, .1, .1) translate3d(0, 1000px, 0);
@@ -292,172 +292,176 @@ const animationList = {
 			transform: scale3d(.475, .475, .475) translate3d(0, -60px, 0);
 			animation-timing-function: cubic-bezier(0.175, 0.885, 0.320, 1);
 		}
-	`,
+	`
 }
 
 // MessageBox
 const MessageBox = styled(ClearFix)`
-    text-align:center;
-    position:fixed;
-    width:100%;
-    left:0;
-    top:20px;
-    z-index:${maxZindex};
-`;
+  text-align: center;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  top: 20px;
+  z-index: ${maxZindex};
+`
 const MessageContent = styled.div`
-    padding:15px 35px 15px 20px;
-    border:1px solid transparent;
-    border-radius:4px;
-    margin:0 auto;
-    color:${props => props.fontColor ? props.fontColor : DefaultFontColor};
-    background-color:${props => props.bgColor ? props.bgColor : DefaultBg};
-    border-color:${props => props.borderColor ? props.borderColor : DefaultBorderColor};
-    display:${props => props.isHasMessage ? "block" : "none"};
-    animation: ${props => props.animationName ? props.animationName : bounce} 1.4s;
-    display:inline-block;
-`;
+  padding: 15px 35px 15px 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  margin: 0 auto;
+  color: ${props => (props.fontColor ? props.fontColor : DefaultFontColor)};
+  background-color: ${props => (props.bgColor ? props.bgColor : DefaultBg)};
+  border-color: ${props =>
+    props.borderColor ? props.borderColor : DefaultBorderColor};
+  display: ${props => (props.isHasMessage ? 'block' : 'none')};
+  animation: ${props => (props.animationName ? props.animationName : bounce)}
+    1.4s;
+  display: inline-block;
+`
 
 const CloseButton = styled.button`
-    position:relative;
-    float:right;
-    top:-2px;
-    right:-28px;
-    color:inherit;
-    -webkit-appearance:none;
-    outline:none;
-    border:0;
-    background:transparent;
-    font-weight:700;
-    opacity:.2;
-    text-shadow:0 1px 0 #fff;
-    line-height:1;
-    cursor:pointer;
-    font-size:21px;
+  position: relative;
+  float: right;
+  top: -2px;
+  right: -28px;
+  color: inherit;
+  -webkit-appearance: none;
+  outline: none;
+  border: 0;
+  background: transparent;
+  font-weight: 700;
+  opacity: 0.2;
+  text-shadow: 0 1px 0 #fff;
+  line-height: 1;
+  cursor: pointer;
+  font-size: 21px;
 
-    &:hover{
-        color: #000;
-        opacity:.5;
-    }
-`;
+  &:hover {
+    color: #000;
+    opacity: 0.5;
+  }
+`
 // message styles
 const MessageStyles = {
-	default: {
-		bgColor: "#d9edf7",
-		borderColor: "#bce8f1",
-		fontColor: "#31708f",
-	},
-	success: {
-		bgColor: "#dff0d8",
-		borderColor: "#d6e9c6",
-		fontColor: "#3c763d",
-	},
-	warning: {
-		bgColor: "#fcf8e3",
-		borderColor: "#faebcc",
-		fontColor: "#8a6d3b",
-	},
-	error: {
-		bgColor: "#f2dede",
-		borderColor: "#ebccd1",
-		fontColor: "#a94442",
-	},
+  default: {
+    bgColor: '#d9edf7',
+    borderColor: '#bce8f1',
+    fontColor: '#31708f'
+  },
+  success: {
+    bgColor: '#dff0d8',
+    borderColor: '#d6e9c6',
+    fontColor: '#3c763d'
+  },
+  warning: {
+    bgColor: '#fcf8e3',
+    borderColor: '#faebcc',
+    fontColor: '#8a6d3b'
+  },
+  error: {
+    bgColor: '#f2dede',
+    borderColor: '#ebccd1',
+    fontColor: '#a94442'
+  }
 }
-
 
 class AlertBox extends PureComponent {
-	constructor(props) {
-		super(props)
-		/**
-		 * @param{message}          String
-		 * @param{type}             [String]: success,warning,error...
-		 * @param{animation}        [String]
-		 * animation support list total(18): default=>bounce
-		 * shake ,rubberBand, wobble,
-		 * bounceIn, bounceInDown, bounceInLeft, bounceInRight, bounceInUp,
-		 * slideInUp, slideOutDown, slideInLeft, slideInRight,
-		 * zoomIn, zoomInDown, zoomInLeft, zoomInRight, zoomInUp,
-		 *
-		 **/
-		this.state = {
-			message: null,
-			type: null,
-			animation: null,
-			delayHideTime: 5000,
-		}
-		this.timerId = null
-	}
+  constructor(props) {
+    super(props)
+    /**
+     * @param{message}          String
+     * @param{type}             [String]: success,warning,error...
+     * @param{animation}        [String]
+     * animation support list total(18): default=>bounce
+     * shake ,rubberBand, wobble,
+     * bounceIn, bounceInDown, bounceInLeft, bounceInRight, bounceInUp,
+     * slideInUp, slideOutDown, slideInLeft, slideInRight,
+     * zoomIn, zoomInDown, zoomInLeft, zoomInRight, zoomInUp,
+     *
+     **/
+    this.state = {
+      message: null,
+      type: null,
+      animation: null,
+      delayHideTime: 5000
+    }
+    this.timerId = null
+  }
 
-	// listener props from Parent Component
-	static getDerivedStateFromProps(nextProps, prevState) {
-		// console.log(nextProps);
-		if (nextProps.message !== prevState.message) {
-			return {
-				message: nextProps.message,
-				type: nextProps.type,
-				animation: nextProps.animation,
-			}
-		}
-		return null;
-	}
+  // listener props from Parent Component
+  static getDerivedStateFromProps(nextProps, prevState) {
+    // console.log(nextProps);
+    if (nextProps.message !== prevState.message) {
+      return {
+        message: nextProps.message,
+        type: nextProps.type,
+        animation: nextProps.animation
+      }
+    }
+    return null
+  }
 
-	// call auto
-	componentDidMount() {
-		this.autoDestroyAlert()
-	}
+  // call auto
+  componentDidMount() {
+    this.autoDestroyAlert()
+  }
 
-	// remove timer
-	componentWillUnmount() {
-		if (this.timerId) {
-			clearTimeout(this.timerId)
-		}
-	}
+  // remove timer
+  componentWillUnmount() {
+    if (this.timerId) {
+      clearTimeout(this.timerId)
+    }
+  }
 
-	//auto remove Alert
-	autoDestroyAlert() {
-		const { message, delayHideTime } = this.state;
-		if (message) {
-			this.timerId = setTimeout(() => {
-				this.props.hideAlert()
-			}, delayHideTime)
-		}
-	}
+  //auto remove Alert
+  autoDestroyAlert() {
+    const { message, delayHideTime } = this.state
+    if (message) {
+      this.timerId = setTimeout(() => {
+        this.props.hideAlert()
+      }, delayHideTime)
+    }
+  }
 
-	//remove by hand
-	destroyAlert = () => {
-		this.props.hideAlert()
-	}
+  //remove by hand
+  destroyAlert = () => {
+    this.props.hideAlert()
+  }
 
-	render() {
-		const { message, type, animation } = this.state;
-		// message style
-		const getMessageStyle = (currentType) => {
-			if (currentType) {
-				return MessageStyles[currentType]
-			}
-		};
-		// alert join animation
-		const getAnimation = (type) => {
-			return animationList[type]
-		}
-		/**
-		 *  ...getMessageStyle(type)对象的结构赋值
-		 *  bgColor={getMessageStyle(type).bgColor}
-		 *  borderColor={getMessageStyle(type).borderColor}
-		 *  fontColor={getMessageStyle(type).fontColor}
-		 *
-		 */
-		return (
-			<div className="message-wrap">
-				<MessageBox>
-					<MessageContent animationName={getAnimation(animation)}
-						isHasMessage={message} {...getMessageStyle(type)}>
-						{message}
-						<CloseButton onClick={this.destroyAlert}>×</CloseButton>
-					</MessageContent>
-				</MessageBox>
-			</div>
-		);
-	}
+  render() {
+    const { message, type, animation } = this.state
+    // message style
+    const getMessageStyle = currentType => {
+      if (currentType) {
+        return MessageStyles[currentType]
+      }
+    }
+    // alert join animation
+    const getAnimation = type => {
+      return animationList[type]
+    }
+    /**
+     *  ...getMessageStyle(type)对象的结构赋值
+     *  bgColor={getMessageStyle(type).bgColor}
+     *  borderColor={getMessageStyle(type).borderColor}
+     *  fontColor={getMessageStyle(type).fontColor}
+     *
+     */
+    return (
+      <div className="message-wrap">
+        <MessageBox>
+          <MessageContent
+            animationName={getAnimation(animation)}
+            isHasMessage={message}
+            {...getMessageStyle(type)}
+          >
+            {message}
+            <CloseButton onClick={this.destroyAlert}>×</CloseButton>
+          </MessageContent>
+        </MessageBox>
+      </div>
+    )
+  }
 }
 
-export default AlertBox;
+export default AlertBox

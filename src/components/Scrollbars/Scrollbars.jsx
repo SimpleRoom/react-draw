@@ -3,8 +3,6 @@ import React from 'react'
 import { Scrollbars } from 'react-custom-scrollbars'
 import styles  from './Bar.module.scss'
 
-import ScrollDraw from './scrollDraw/ScrollDraw'
-
 class Bars extends React.Component {
   render() {
     return (
@@ -24,7 +22,6 @@ class Bars extends React.Component {
         <p>Some great content...</p>
         <p>Some great content...</p>
         <p>Some great content...</p>
-        <ScrollDraw />
       </Scrollbars>
     );
   }

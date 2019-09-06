@@ -87,7 +87,12 @@ class Home extends PureComponent {
       <Main>
         <TabBox>
           {navList.map((item) =>
-            <NavButton onClick={this.showPage} data-id={item.id} active={getActive(item)} key={item.id}>{item.name}</NavButton>
+            <NavButton
+              onClick={this.showPage}
+              data-id={item.id}
+              active={getActive(item)}
+              key={item.id}>{item.name}
+            </NavButton>
           )}
         </TabBox>
         <Container>

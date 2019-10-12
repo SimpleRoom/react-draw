@@ -29,7 +29,7 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
-// 添加stylus
+// 1.dev-添加stylus
 const stylusRegex = /\.(styl|stylus)/;
 const stylusModuleRegex = /\.module\.(styl|stylus)/;
 

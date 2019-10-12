@@ -1,9 +1,8 @@
 import React from 'react'
-
 import { Scrollbars } from 'react-custom-scrollbars'
-import styles  from './Bar.module.scss'
+import styles  from './CustomScrollbars.module.scss'
 
-class Bars extends React.Component {
+class CustomScrollbars extends React.Component {
   render() {
     return (
       <Scrollbars style={{ width: 500, height: 300 }} className={styles.barWrap}>
@@ -27,4 +26,4 @@ class Bars extends React.Component {
   }
 }
 
-export default Bars
+export default CustomScrollbars

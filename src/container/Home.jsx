@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react'
-import Draw from '../components/Draw'
 // 手寫
 import styled from 'styled-components'
 import { ClearFix } from '../components/commonStyle'
 
-import Bars from '../components/Bars'
+import CustomScrollbars from '../components/CustomScrollbars/CustomScrollbars'
+// import Draw from '../components/Draw'
+import GonggeDraw from '../components/GonggeDraw/GonggeDraw'
+import ScrollDraw from '../components/ScrollDraw/ScrollDraw'
 
 const Main = styled.div`
   width: 660px;
@@ -21,7 +23,7 @@ const TabBox = styled.div`
 `
 const NavButton = styled.button`
   display: inline-block;
-  width: 100px;
+  /* width: 100px; */
   height: 32px;
   -webkit-appearance: none;
   outline: none;
@@ -48,11 +50,11 @@ const SectionTwo = styled(ClearFix)`
 const navList = [
   {
     id: 1,
-    name: 'Todo'
+    name: 'Turntable draw'
   },
   {
     id: 2,
-    name: 'Draw'
+    name: 'Gongge draw'
   }
 ]
 
@@ -97,10 +99,11 @@ class Home extends PureComponent {
         </TabBox>
         <Container>
           <SectionOne showIndex={activeIndex}>
-            <Bars />
+            <CustomScrollbars />
           </SectionOne>
           <SectionTwo showIndex={activeIndex}>
-            <Draw />
+            <GonggeDraw />
+            <ScrollDraw />
           </SectionTwo>
         </Container>
       </Main>

@@ -2,7 +2,7 @@ import React from 'react'
 
 import { Scrollbars } from 'react-custom-scrollbars'
 
-class Bars extends React.Component {
+class TurntableDraw extends React.Component {
   render() {
     return (
       <Scrollbars style={{ width: 500, height: 300 }}>
@@ -26,4 +26,4 @@ class Bars extends React.Component {
   }
 }
 
-export default Bars
+export default TurntableDraw

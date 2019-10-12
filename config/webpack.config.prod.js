@@ -1,4 +1,3 @@
-'use strict';
 
 const path = require('path');
 const webpack = require('webpack');
@@ -48,6 +47,10 @@ const cssRegex = /\.css$/;
 const cssModuleRegex = /\.module\.css$/;
 const sassRegex = /\.(scss|sass)$/;
 const sassModuleRegex = /\.module\.(scss|sass)$/;
+
+// 1.prod-添加stylus
+const stylusRegex = /\.(styl|stylus)/;
+const stylusModuleRegex = /\.module\.(styl|stylus)/;
 
 // common function to get style loaders
 const getStyleLoaders = (cssOptions, preProcessor) => {
@@ -393,6 +396,30 @@ module.exports = {
                 getLocalIdent: getCSSModuleLocalIdent,
               },
               'sass-loader'
+            ),
+          },
+          // ---------------------2.stylus---------------
+          {
+            test: stylusRegex,
+            exclude: stylusModuleRegex,
+            loader: getStyleLoaders(
+              {
+                importLoaders: 2,
+                sourceMap: shouldUseSourceMap,
+              },
+              'stylus-loader'
+            ),
+          },
+          {
+            test: stylusModuleRegex,
+            loader: getStyleLoaders(
+              {
+                importLoaders: 2,
+                sourceMap: shouldUseSourceMap,
+                modules: true,
+                getLocalIdent: getCSSModuleLocalIdent,
+              },
+              'stylus-loader'
             ),
           },
           // "file" loader makes sure assets end up in the `build` folder.

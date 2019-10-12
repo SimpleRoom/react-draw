@@ -1,7 +1,7 @@
 import React, { PureComponent } from 'react'
 import styled, { keyframes } from 'styled-components'
-import AlertBox from './AlertBox'
-import { getGift } from './DrawData'
+import AlertBox from '../AlertBox'
+import { getGift } from '../DrawData'
 
 // common
 const bgBorderColor = '#0066FF'
@@ -181,7 +181,7 @@ function getRandomNum(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
-class Draw extends PureComponent {
+class GonggeDraw extends PureComponent {
   constructor(props) {
     super(props)
     this.state = {
@@ -402,4 +402,4 @@ class Draw extends PureComponent {
   }
 }
 
-export default Draw
+export default GonggeDraw

@@ -1,11 +1,11 @@
 import React from 'react'
 
-import { Scrollbars } from 'react-custom-scrollbars'
+import styles from './TurntableDraw.module.styl'
 
 class TurntableDraw extends React.Component {
   render() {
     return (
-      <Scrollbars style={{ width: 500, height: 300 }}>
+      <div className={styles.turnWrap}>
         <p>Some great content...</p>
         <p>Some great content...</p>
         <p>Some great content...</p>
@@ -21,8 +21,8 @@ class TurntableDraw extends React.Component {
         <p>Some great content...</p>
         <p>Some great content...</p>
         <p>Some great content...</p>
-      </Scrollbars>
-    );
+      </div>
+    )
   }
 }
 

@@ -3,12 +3,12 @@ import React, { PureComponent } from 'react'
 import styled from 'styled-components'
 import { ClearFix } from '../components/commonStyle'
 
-import CustomScrollbars from '../components/CustomScrollbars/CustomScrollbars'
+import TurntableDraw from '../components/TurntableDraw/TurntableDraw'
 import GonggeDraw from '../components/GonggeDraw/GonggeDraw'
 // import ScrollDraw from '../components/ScrollDraw/ScrollDraw'
 
 const Main = styled.div`
-  width: 660px;
+  max-width: 660px;
   margin: 0 auto;
 `
 const Container = styled.div`
@@ -98,7 +98,7 @@ class Home extends PureComponent {
         </TabBox>
         <Container>
           <SectionOne showIndex={activeIndex}>
-            <CustomScrollbars />
+            <TurntableDraw />
           </SectionOne>
           <SectionTwo showIndex={activeIndex}>
             <GonggeDraw />

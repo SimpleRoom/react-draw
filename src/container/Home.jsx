@@ -4,9 +4,8 @@ import styled from 'styled-components'
 import { ClearFix } from '../components/commonStyle'
 
 import CustomScrollbars from '../components/CustomScrollbars/CustomScrollbars'
-// import Draw from '../components/Draw'
 import GonggeDraw from '../components/GonggeDraw/GonggeDraw'
-import ScrollDraw from '../components/ScrollDraw/ScrollDraw'
+// import ScrollDraw from '../components/ScrollDraw/ScrollDraw'
 
 const Main = styled.div`
   width: 660px;
@@ -103,7 +102,6 @@ class Home extends PureComponent {
           </SectionOne>
           <SectionTwo showIndex={activeIndex}>
             <GonggeDraw />
-            <ScrollDraw />
           </SectionTwo>
         </Container>
       </Main>

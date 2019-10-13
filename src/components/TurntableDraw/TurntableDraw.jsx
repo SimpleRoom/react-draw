@@ -1,5 +1,6 @@
 import React from 'react'
 
+import AlertBox from '../AlertBox'
 import styles from './TurntableDraw.module.styl'
 import { TurnGifts } from '../DrawData'
 
@@ -9,6 +10,10 @@ class TurntableDraw extends React.Component {
     this.state = {
       rotateDeg: 'rotate(0deg)',
       rotating: false,
+      // 消息提示框
+      message: null,
+      messageType: null,
+      animationName: null
     }
     // 一圈的总长度，礼物总数量
     this.stepCount = TurnGifts.length
@@ -63,15 +68,39 @@ class TurntableDraw extends React.Component {
     } else {
       clearTimeout(this.timer)
       this.timer = null
+      this.setState({
+        messageType: 'success',
+        message: `恭喜获得${TurnGifts[this.activeIndex - 1].name}`,
+        animationName: null,
+      })
       console.log(this.activeIndex, this.endStopIndex, 'end--')
       console.log(TurnGifts[this.activeIndex - 1])
     }
   }
 
+  //移除alert的回调
+  removeAlert = () => {
+    this.setState({ message: null, messageType: null, animationName: null })
+  }
+
   render() {
-    const { rotateDeg } = this.state
+    const {
+      message,
+      messageType,
+      animationName,
+      rotateDeg,
+    } = this.state
     return (
       <div className={styles.turnWrap}>
+        {/* tipsBox */}
+        {message ? (
+          <AlertBox
+            message={message}
+            type={messageType}
+            animation={animationName}
+            hideAlert={this.removeAlert}
+          />
+        ) : null}
         <div className={styles.containerBox} style={{ transform: rotateDeg }}>
           {
             TurnGifts.map((item) => (

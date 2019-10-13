@@ -1,7 +1,54 @@
 .turnWrap
   position relative
-  width 8.533333rem
-  height 10.666667rem
+  width 8.893333rem // 667px
+  height 11.106667rem
   margin 0 auto
   background-size cover
   background-image url('/images/turntable_zj.png')
+
+.containerBox
+  width 6.933333rem // 520px
+  height 6.933333rem
+  background-size cover
+  background-image url('/images/inner.png')
+  position absolute
+  left .98rem
+  top 1rem
+  // transform translateX(-50%)
+  transform-origin 50% 50%
+  z-index 1
+
+
+.rotateItem
+  width 2.533333rem /*190px*/
+  height 3.413333rem
+  display flex
+  flex-direction column
+  align-items center
+  position: absolute
+  top: 0rem
+  left: 2.18rem
+  transform-origin: 50% 100%
+  user-select none
+
+  div
+    font-size .266667rem // 20px
+    padding-top .1rem
+
+  img
+    width 1.333333rem
+    height 1.333333rem
+    margin-top .133333rem
+
+// btn
+.turnBtn
+  width 2.346667rem
+  height 3.066667rem
+  background-size cover
+  background-image url('/images/point.png')
+  position absolute
+  left 50%
+  top 2.82rem
+  transform translateX(-50%)
+  z-index 5
+  cursor pointer

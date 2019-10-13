@@ -107,6 +107,7 @@ const GiftList = [{
         top: "92px",
     },
 ]
+
 // random
 function getRandomNum(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min);
@@ -125,6 +126,59 @@ function getGift(index) {
     }
 }
 
+// 转盘礼物
+const TurnGifts = [
+    {
+        id: 1,
+        name: "Iphone11",
+        icon: "/images/iphonex.png",
+        rotate: 'rotate(0deg)',
+    },
+    {
+        id: 2,
+        name: "100元话费",
+        icon: "/images/iphonex.png",
+        rotate: 'rotate(45deg)',
+    },
+    {
+        id: 3,
+        name: "京东购物卡",
+        icon: "/images/iphonex.png",
+        rotate: 'rotate(90deg)',
+    },
+    {
+        id: 4,
+        name: "爱奇艺会员",
+        icon: "/images/iphonex.png",
+        rotate: 'rotate(135deg)',
+    },
+    {
+        id: 5,
+        name: "50元话费",
+        icon: "/images/iphonex.png",
+        rotate: 'rotate(180deg)',
+    },
+    {
+        id: 6,
+        name: "100购物积分",
+        icon: "/images/iphonex.png",
+        rotate: 'rotate(-135deg)',
+    },
+    {
+        id: 7,
+        name: "周大福钻戒",
+        icon: "/images/iphonex.png",
+        rotate: 'rotate(-90deg)',
+    },
+    {
+        id: 8,
+        name: "1年QQ会员",
+        icon: "/images/iphonex.png",
+        rotate: 'rotate(-45deg)',
+    },
+]
+
 export {
-    getGift
+    getGift,
+    TurnGifts,
 }

@@ -42,7 +42,6 @@ const GrawTitle = styled.div`
 `
 const DrawWrap = styled.div`
   width: 640px;
-  padding-top: 30px;
   margin: 0 auto;
 `
 const DrawBg = styled(ClearFix)`

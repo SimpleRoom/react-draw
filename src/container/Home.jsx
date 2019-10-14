@@ -22,7 +22,7 @@ const TabBox = styled.div`
 `
 const NavButton = styled.button`
   display: inline-block;
-  /* width: 100px; */
+  margin: 0 20px;
   height: 32px;
   -webkit-appearance: none;
   outline: none;
@@ -49,11 +49,11 @@ const SectionTwo = styled(ClearFix)`
 const navList = [
   {
     id: 1,
-    name: 'Turntable draw'
+    name: '转盘抽奖'
   },
   {
     id: 2,
-    name: 'Gongge draw'
+    name: '宫格抽奖'
   }
 ]
 

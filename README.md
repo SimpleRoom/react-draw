@@ -5,7 +5,7 @@
 <p><code>npm run build</code></p>
 
 >  简介
-+ 1、 [在线体验](https://wjf444128852.github.io/demo/react/draw)
++ 1、 [在线体验](https://jiucheng-front.github.io/demo/react/draw/)
 + 2、 默认使用: [create-react-app](https://github.com/facebook/create-react-app)
 + 3、 添加更改的配置:
   + 1、<code>package.json</code>内添加了<code>"homepage":"public"</code>作为静态本地服务器根目录，方便本地开发环境静态资源引用，打包时候会自动拷贝过去；
